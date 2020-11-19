@@ -51,6 +51,12 @@ public class LoginMenu extends Pane{
         
     }
     
+    public void reset(){
+        this.userTextField.setText("");
+        this.passwordField.setText("");
+        this.loginMessage.setText("");
+    }
+    
     public String getUsername(){
         return this.userTextField.getText();
     }

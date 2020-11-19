@@ -40,6 +40,7 @@ public class LoginHandler implements EventHandler<ActionEvent>{
                     if(resultSet.getString("email") != null){
                         user.setEmail(resultSet.getString("email"));
                     }
+                    loginMenu.reset();
                     HandyAndyApplication.setCurrentUser(user);
                     HandyAndyApplication.setSceneUserMenu();
                 }
