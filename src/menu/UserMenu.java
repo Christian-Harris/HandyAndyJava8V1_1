@@ -105,7 +105,7 @@ public final class UserMenu extends BorderPane{
                 leftPane.getChildren().add(inputView);
                 setLeft(leftPane);
                 
-                
+                /*
                 outputDocument = JensenPropertyManagementParser.parse(inputFile);
                 System.out.println(outputDocument.getNumberOfPages());
                 outputRenderer = new PDFRenderer(outputDocument);
@@ -116,15 +116,15 @@ public final class UserMenu extends BorderPane{
                 outputView.setImage(outputImage);
                 rightPane.getChildren().add(outputView);
                 setRight(rightPane);
+                */
                 
                 
-                /*
                 PDFTextStripper pdfStripper = new PDFTextStripper();
                 String text = pdfStripper.getText(inputDocument);
                 output.setText(text);
                 rightPane.getChildren().add(output);
                 setRight(rightPane);
-                */
+                
                 
             }
             catch(IOException ex){
