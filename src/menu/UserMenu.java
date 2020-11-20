@@ -16,6 +16,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import application.HandyAndyApplication;
+import application.editor.Editor;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,13 +34,13 @@ import parser.JensenPropertyManagementParser;
  */
 
 public final class UserMenu extends BorderPane{
-    private MenuBar menuBar;
+    private final MenuBar menuBar;
     
-    private Menu fileMenu;
+    private final Menu fileMenu;
     private MenuItem openFile;
     
-    private Menu userMenu;
-    private MenuItem logoutItem;
+    private final Menu userMenu;
+    private final MenuItem logoutItem;
     
     private Pane leftPane;
     private  File inputFile;
@@ -55,8 +56,11 @@ public final class UserMenu extends BorderPane{
     private  Image outputImage;
     private  ImageView outputView;
     
+    private Pane centerPane;
+    
     private PDFRenderer inputRenderer;
     private PDFRenderer outputRenderer;
+    private Editor editor;
     
     private Text output = new Text();
     
@@ -68,6 +72,7 @@ public final class UserMenu extends BorderPane{
         inputView = new ImageView();
         leftPane = new StackPane();
         rightPane = new StackPane();
+        centerPane = new StackPane();
         
         fileMenu = new Menu("File");
         openFile = new MenuItem("Open File");
@@ -85,6 +90,8 @@ public final class UserMenu extends BorderPane{
         leftPane.setOnScroll(event -> scrollInput(event));
         
         rightPane.setStyle("-fx-border-color: grey; -fx-border-width: 5px; -fx-alignment: center");
+        
+        centerPane.setStyle("-fx-border-color: grey; -fx-border-width: 5px; -fx-alignment: center");
         
         
         this.setTop(menuBar);
@@ -104,6 +111,7 @@ public final class UserMenu extends BorderPane{
                 this.inputImage = SwingFXUtils.toFXImage(inputRenderer.renderImage(currentInputPage), null);
                 this.inputView = new ImageView();
                 this.inputView.setImage(inputImage);
+                this.leftPane.getChildren().clear();
                 this.leftPane.getChildren().add(inputView);
                 this.setLeft(leftPane);
                 
@@ -118,11 +126,16 @@ public final class UserMenu extends BorderPane{
                 this.rightPane.getChildren().add(outputView);
                 this.setRight(rightPane);
                 */
+                editor = new Editor();
+                this.centerPane.getChildren().clear();
+                this.centerPane.getChildren().add(editor);
+                this.setCenter(centerPane);
                 
                 
                 PDFTextStripper pdfStripper = new PDFTextStripper();
                 String text = pdfStripper.getText(inputDocument);
                 this.output.setText(text);
+                this.rightPane.getChildren().clear();
                 this.rightPane.getChildren().add(output);
                 this.setRight(rightPane);
                 
