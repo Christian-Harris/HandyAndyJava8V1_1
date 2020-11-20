@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripper;
+import parser.JensenPropertyManagementParser;
 
 /**
  *
@@ -50,21 +51,20 @@ public final class UserMenu extends BorderPane{
     private static Pane rightPane;
     private  static File outputFile;
     private  static PDDocument outputDocument;
-    //private  static Image outputImage;
-    //private  static ImageView outputView;
-    private static Text output;
+    private static int currentOutputPage;
+    private  static Image outputImage;
+    private  static ImageView outputView;
     
     private static PDFRenderer inputRenderer;
+    private static PDFRenderer outputRenderer;
     
-    //private static PDFRenderer renderer;
+    private static Text output = new Text();
     
     public UserMenu(){
         menuBar = new MenuBar();
         inputView = new ImageView();
-        output = new Text();
         leftPane = new StackPane();
         rightPane = new StackPane();
-        //Pane centerPane = new Pane();
         
         fileMenu = new Menu("File");
         openFile = new MenuItem("Open File");
@@ -96,21 +96,36 @@ public final class UserMenu extends BorderPane{
             try{
                 inputFile = file;
                 inputDocument = PDDocument.load(file);
-                
                 inputRenderer = new PDFRenderer(inputDocument);
                 currentInputPage = 0;
-                BufferedImage bImage = inputRenderer.renderImage(currentInputPage);
-                inputImage = SwingFXUtils.toFXImage(bImage, null);
+                BufferedImage bInputImage = inputRenderer.renderImage(currentInputPage);
+                inputImage = SwingFXUtils.toFXImage(bInputImage, null);
                 inputView = new ImageView();
                 inputView.setImage(inputImage);
                 leftPane.getChildren().add(inputView);
                 setLeft(leftPane);
                 
+                
+                outputDocument = JensenPropertyManagementParser.parse(inputFile);
+                System.out.println(outputDocument.getNumberOfPages());
+                outputRenderer = new PDFRenderer(outputDocument);
+                currentOutputPage = 0;
+                BufferedImage bOutputImage = outputRenderer.renderImage(currentOutputPage);
+                outputImage = SwingFXUtils.toFXImage(bOutputImage, null);
+                outputView = new ImageView();
+                outputView.setImage(outputImage);
+                rightPane.getChildren().add(outputView);
+                setRight(rightPane);
+                
+                
+                /*
                 PDFTextStripper pdfStripper = new PDFTextStripper();
                 String text = pdfStripper.getText(inputDocument);
                 output.setText(text);
                 rightPane.getChildren().add(output);
                 setRight(rightPane);
+                */
+                
             }
             catch(IOException ex){
                 ex.printStackTrace();
@@ -144,6 +159,15 @@ public final class UserMenu extends BorderPane{
                     ex.printStackTrace();
                 }
             }
+        }
+    }
+    
+    public static void close() throws IOException{
+        if(inputDocument != null){
+            inputDocument.close();
+        }
+        if(outputDocument != null){
+            outputDocument.close();
         }
     }
 }

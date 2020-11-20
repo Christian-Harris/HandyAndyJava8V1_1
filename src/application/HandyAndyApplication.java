@@ -3,15 +3,14 @@ package application;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.io.IOException;
 
 import javafx.application.Application;
-//import static javafx.application.Application.launch;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
-import javafx.scene.layout.Pane;
 
 import menu.LoginMenu;
 import user.User;
@@ -53,9 +52,13 @@ public class HandyAndyApplication extends Application{
                 try{
                     databaseConnection.close();
                     System.out.println("Disconnected from database.");
+                    UserMenu.close();
                 }
                 catch(SQLException ex){
                     System.out.println(ex);
+                }
+                catch(IOException ex){
+                    ex.printStackTrace();
                 }
                 Platform.exit();
                 System.exit(0);
