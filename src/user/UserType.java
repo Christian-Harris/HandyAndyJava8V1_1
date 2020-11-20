@@ -7,7 +7,7 @@ package user;
 public enum UserType {
     USER (0, "User"),
     ADMIN (1, "Admin"),
-    CREW (2, "Crew");
+    CREW (2, "Employee");
     
     private final int code;
     private final String name;
@@ -31,7 +31,7 @@ public enum UserType {
                 return UserType.USER;
             case "Admin":
                 return UserType.ADMIN;
-            case "Crew":
+            case "Employee":
                 return UserType.CREW;
             default:
                 return null;

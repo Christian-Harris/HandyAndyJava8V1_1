@@ -5,10 +5,13 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.image.Image;
-import javafx.event.ActionEvent;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import javafx.event.ActionEvent;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -17,13 +20,9 @@ import handler.LogoutHandler;
 import java.io.File;
 import java.io.IOException;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripper;
 
@@ -32,29 +31,40 @@ import org.apache.pdfbox.text.PDFTextStripper;
  * @author Christian Harris
  */
 
-public class UserMenu extends BorderPane{
-    private MenuBar menuBar;
+public final class UserMenu extends BorderPane{
+    private static MenuBar menuBar;
     
-    private Menu fileMenu;
-    private MenuItem openFile;
+    private static Menu fileMenu;
+    private static MenuItem openFile;
     
-    private Menu userMenu;
-    private MenuItem logout;
+    private static Menu userMenu;
+    private static MenuItem logout;
     
-    private  File inputFile;
-    private  PDDocument inputDocument;
-    private  Image inputImage;
-    private  ImageView inputView;
+    private static Pane leftPane;
+    private  static File inputFile;
+    private  static PDDocument inputDocument;
+    private static int currentInputPage;
+    private  static Image inputImage;
+    private  static ImageView inputView;
     
-    private  File outputFile;
-    private  PDDocument outputDocument;
-    private  Image outputImage;
-    private  ImageView outputView;
+    private static Pane rightPane;
+    private  static File outputFile;
+    private  static PDDocument outputDocument;
+    //private  static Image outputImage;
+    //private  static ImageView outputView;
+    private static Text output;
     
-    private PDFRenderer renderer;
+    private static PDFRenderer inputRenderer;
+    
+    //private static PDFRenderer renderer;
     
     public UserMenu(){
         menuBar = new MenuBar();
+        inputView = new ImageView();
+        output = new Text();
+        leftPane = new StackPane();
+        rightPane = new StackPane();
+        //Pane centerPane = new Pane();
         
         fileMenu = new Menu("File");
         openFile = new MenuItem("Open File");
@@ -68,8 +78,15 @@ public class UserMenu extends BorderPane{
         
         menuBar.getMenus().addAll(fileMenu, userMenu);
         
+        leftPane.setStyle("-fx-border-color: grey; -fx-border-width: 5px; -fx-alignment: top-center");
+        leftPane.setOnScroll(event -> scrollInput(event));
+        
+        rightPane.setStyle("-fx-border-color: grey; -fx-border-width: 5px; -fx-alignment: center");
+        
+        
         this.setTop(menuBar);
     }
+    
     
     private void openFile(ActionEvent e){
         Stage stage = new Stage();
@@ -78,25 +95,54 @@ public class UserMenu extends BorderPane{
         if(file != null){
             try{
                 inputFile = file;
-                try{
-                    inputDocument = PDDocument.load(file);
-                }
-                catch(IOException ex){
-                    //Catches in case file was not a pdf needs to be restructured around entire method.
-                }
-                renderer = new PDFRenderer(inputDocument);
-                BufferedImage bImage = renderer.renderImage(0);
+                inputDocument = PDDocument.load(file);
+                
+                inputRenderer = new PDFRenderer(inputDocument);
+                currentInputPage = 0;
+                BufferedImage bImage = inputRenderer.renderImage(currentInputPage);
                 inputImage = SwingFXUtils.toFXImage(bImage, null);
                 inputView = new ImageView();
                 inputView.setImage(inputImage);
-                setLeft(inputView);
+                leftPane.getChildren().add(inputView);
+                setLeft(leftPane);
                 
                 PDFTextStripper pdfStripper = new PDFTextStripper();
                 String text = pdfStripper.getText(inputDocument);
-                setRight(new Text(text));
+                output.setText(text);
+                rightPane.getChildren().add(output);
+                setRight(rightPane);
             }
             catch(IOException ex){
                 ex.printStackTrace();
+            }
+        }
+    }
+    
+    private void scrollInput(ScrollEvent e){
+        if(e.getDeltaY() > 0){
+            if(currentInputPage != 0){
+                try{
+                    currentInputPage--;
+                    BufferedImage bImage = inputRenderer.renderImage(currentInputPage);
+                    inputImage = SwingFXUtils.toFXImage(bImage, null);
+                    inputView.setImage(inputImage);
+                }
+                catch(IOException ex){
+                    ex.printStackTrace();
+                }
+            }
+        }
+        else if(e.getDeltaY() < 0){
+            if(currentInputPage != inputDocument.getNumberOfPages() && (currentInputPage + 1 ) < inputDocument.getNumberOfPages()){
+                try{
+                    currentInputPage++;
+                    BufferedImage bImage = inputRenderer.renderImage(currentInputPage);
+                    inputImage = SwingFXUtils.toFXImage(bImage, null);
+                    inputView.setImage(inputImage);
+                }
+                catch(IOException ex){
+                    ex.printStackTrace();
+                }
             }
         }
     }

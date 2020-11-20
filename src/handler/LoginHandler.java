@@ -2,6 +2,7 @@ package handler;
 
 import application.HandyAndyApplication;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -23,17 +24,18 @@ public class LoginHandler implements EventHandler<ActionEvent>{
     @Override
     public void handle(ActionEvent e){
         Connection databaseConnection = null;
-        Statement statement = null;
+        PreparedStatement statement = null;
         ResultSet resultSet = null;
         
         LoginMenu loginMenu = null;
         
         try{
             databaseConnection = HandyAndyApplication.getDatabaseConnection();      
-            statement = databaseConnection.createStatement();
+            //statement = databaseConnection.createStatement();
             loginMenu = (LoginMenu)(((VBox)(((Button)(e.getSource())).getParent())).getParent());
             String query = "SELECT * from users WHERE username = " + "'" + loginMenu.getUsername() + "'";
-            resultSet = statement.executeQuery(query);
+            statement = databaseConnection.prepareStatement(query);
+            resultSet = statement.executeQuery();
             if(resultSet.next()){
                 if(loginMenu.getPassword().equals(resultSet.getString("password"))){
                     User user = new User(resultSet.getString("username"), resultSet.getString("password"), UserType.getUserType(resultSet.getString("userType")));
