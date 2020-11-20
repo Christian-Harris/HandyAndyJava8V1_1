@@ -1,14 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package application.editor;
+
+import javafx.scene.control.CheckBox;
 
 /**
  *
- * @author Lau_X
+ * @author Christian Harris
  */
-public class RoomItem {
+public final class RoomItem extends CheckBox{
     
+    public RoomItem(){
+        super();
+    }
+    
+    public RoomItem(String text){
+        super(text);
+    }
 }

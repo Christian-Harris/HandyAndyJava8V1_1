@@ -1,14 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package application.editor;
+
+import java.util.ArrayList;
+import javafx.scene.Node;
+import javafx.scene.control.TitledPane;
 
 /**
  *
- * @author Lau_X
+ * @author Christian Harris
  */
-public class Room {
+public final class Room extends TitledPane{
     
+    private static ArrayList<RoomItem> roomItems = new ArrayList<RoomItem>();
+    
+    public Room(){
+        super();
+    }
+    public Room(String title, Node content){
+        super(title, content);
+    }
 }

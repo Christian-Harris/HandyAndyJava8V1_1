@@ -4,7 +4,6 @@ import application.HandyAndyApplication;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.ResultSet;
 
 import javafx.event.ActionEvent;
