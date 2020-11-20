@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 
 import handler.LoginHandler;
+import application.HandyAndyApplication;
+import javafx.application.Application;
 
 /**
  *
@@ -17,21 +19,23 @@ import handler.LoginHandler;
  */
 public class LoginMenu extends Pane{
     
-    private final VBox loginBox;
+    private VBox loginBox;
     
-    private final Label userLabel;
-    private final TextField userTextField;
-    private final HBox userBox;
+    private Label userLabel;
+    private TextField userTextField;
+    private HBox userBox;
     
-    private final Label passwordLabel;
-    private final PasswordField passwordField;
-    private final HBox passwordBox;
+    private Label passwordLabel;
+    private PasswordField passwordField;
+    private HBox passwordBox;
     
-    private final Button loginButton;
+    private Button loginButton;
     
-    private final Label loginMessage;
+    private Label loginMessage;
+    private HandyAndyApplication application;
     
-    public LoginMenu(){
+    public LoginMenu(HandyAndyApplication application){
+        this.application = application;
         userLabel = new Label("Username: ");
         userTextField = new TextField("username");
         userBox = new HBox(userLabel, userTextField);
@@ -67,5 +71,9 @@ public class LoginMenu extends Pane{
     
     public void setLoginMessage(String message){
         this.loginMessage.setText(message);
+    }
+    
+    public HandyAndyApplication getApplication(){
+        return this.application;
     }
 }

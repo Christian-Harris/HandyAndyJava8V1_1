@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
+import javafx.scene.layout.Pane;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -21,20 +23,13 @@ import user.UserType;
  */
 public class LoginHandler implements EventHandler<ActionEvent>{
     @Override
-    public void handle(ActionEvent e){
-        Connection databaseConnection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-        
-        LoginMenu loginMenu = null;
-        
+    public void handle(ActionEvent e){   
         try{
-            databaseConnection = HandyAndyApplication.getDatabaseConnection();      
-            //statement = databaseConnection.createStatement();
-            loginMenu = (LoginMenu)(((VBox)(((Button)(e.getSource())).getParent())).getParent());
+            LoginMenu loginMenu = ((LoginMenu)((VBox)((Button)e.getSource()).getParent()).getParent());
+            Connection databaseConnection = loginMenu.getApplication().getDatabaseConnection(); 
             String query = "SELECT * from users WHERE username = " + "'" + loginMenu.getUsername() + "'";
-            statement = databaseConnection.prepareStatement(query);
-            resultSet = statement.executeQuery();
+            PreparedStatement statement = databaseConnection.prepareStatement(query);
+            ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
                 if(loginMenu.getPassword().equals(resultSet.getString("password"))){
                     User user = new User(resultSet.getString("username"), resultSet.getString("password"), UserType.getUserType(resultSet.getString("userType")));
@@ -42,8 +37,8 @@ public class LoginHandler implements EventHandler<ActionEvent>{
                         user.setEmail(resultSet.getString("email"));
                     }
                     loginMenu.reset();
-                    HandyAndyApplication.setCurrentUser(user);
-                    HandyAndyApplication.setSceneUserMenu();
+                    loginMenu.getApplication().setCurrentUser(user);
+                    loginMenu.getApplication().changeToUserMenu();
                 }
                 else{
                     loginMenu.setLoginMessage("Invalid username or password.");

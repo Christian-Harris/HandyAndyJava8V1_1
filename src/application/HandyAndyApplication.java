@@ -9,7 +9,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 
 import menu.LoginMenu;
@@ -21,52 +20,36 @@ import menu.UserMenu;
  * @author Christian Harris
  */
 
-public class HandyAndyApplication extends Application{
+public final class HandyAndyApplication extends Application{
     
-    private static User currentUser = null;
+    private User currentUser = null;
     
-    private static final String APP_USER = "application";
-    private static final String APP_PSWD = "applicationPassword";
-    private static final String CONN_STR = "jdbc:mysql://localhost:3306/handyandydb";
-    private static Connection databaseConnection = null;
+    private String applicationUsername = "application";
+    private String applicationPassword = "applicationPassword";
+    private String connectionString = "jdbc:mysql://localhost:3306/handyandydb";
+    private Connection databaseConnection = null;
     
-    private static LoginMenu loginMenu;
-    private static UserMenu userMenu;
+    private LoginMenu loginMenu;
+    private UserMenu userMenu;
     
-    private static Scene scene;
+    private Scene scene;
+    
+    public static void main(String[] args){
+        launch(args);
+    } 
     
     @Override
     public void start(Stage stage){
-        
+        stage.setOnCloseRequest(event -> close(event));
         try{
-            databaseConnection = DriverManager.getConnection(CONN_STR, APP_USER, APP_PSWD);
-            System.out.println("Connected to database.");
+            this.connectToDatabase(connectionString, applicationUsername, applicationPassword);
         }
         catch(SQLException ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
         
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent e) {
-                try{
-                    databaseConnection.close();
-                    System.out.println("Disconnected from database.");
-                    UserMenu.close();
-                }
-                catch(SQLException ex){
-                    System.out.println(ex);
-                }
-                catch(IOException ex){
-                    ex.printStackTrace();
-                }
-                Platform.exit();
-                System.exit(0);
-            }
-        });
-        
-        loginMenu = new LoginMenu();
-        userMenu = new UserMenu();
+        loginMenu = new LoginMenu(this);
+        userMenu = new UserMenu(this);
         
         scene = new Scene(loginMenu, 600, 400);
         
@@ -75,23 +58,58 @@ public class HandyAndyApplication extends Application{
         stage.show();
     }
     
-    public static void setCurrentUser(User user){
+    public LoginMenu getLoginMenu(){
+        return this.loginMenu;
+    }
+    
+    public void changeToLoginMenu(){
+        this.scene.setRoot(loginMenu);
+    }
+    
+    public UserMenu getUserMenu(){
+        return this.userMenu;
+    }
+    
+    public void changeToUserMenu(){
+        this.scene.setRoot(userMenu);
+    }
+    
+    public void setCurrentUser(User user){
         currentUser = user;
     }
     
-    public static Connection getDatabaseConnection(){
-        return HandyAndyApplication.databaseConnection;
+    public User getCurrentUser(){
+        return this.currentUser;
     }
     
-    public static void main(String[] args){
-        launch(args);
-    } 
-    
-    public static void setSceneUserMenu(){
-        scene.setRoot(userMenu);
+    public Connection getDatabaseConnection(){
+        return this.databaseConnection;
     }
     
-    public static void setSceneLoginMenu(){
-        scene.setRoot(loginMenu);
+    public void setConnectionParameters(String connectionString, String applicationUsername, String applicationPassword){
+        this.connectionString = connectionString;
+        this.applicationUsername = applicationUsername;
+        this.applicationPassword = applicationPassword;
+    }
+    
+    public void connectToDatabase(String connectionString, String applicationUsername, String applicationPassword) throws SQLException{
+        databaseConnection = DriverManager.getConnection(connectionString, applicationUsername, applicationPassword);
+        System.out.println("Connected to database.");
+    }
+    
+    public void close(WindowEvent e){
+        try{
+            this.databaseConnection.close();
+            System.out.println("Disconnected from database.");
+            this.userMenu.close();
+        }
+        catch(SQLException ex){
+            System.out.println(ex);
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
+        Platform.exit();
+        System.exit(0);
     }
 }

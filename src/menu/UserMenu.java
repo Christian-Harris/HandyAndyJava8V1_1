@@ -15,7 +15,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import handler.LogoutHandler;
+import application.HandyAndyApplication;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,34 +33,37 @@ import parser.JensenPropertyManagementParser;
  */
 
 public final class UserMenu extends BorderPane{
-    private static MenuBar menuBar;
+    private MenuBar menuBar;
     
-    private static Menu fileMenu;
-    private static MenuItem openFile;
+    private Menu fileMenu;
+    private MenuItem openFile;
     
-    private static Menu userMenu;
-    private static MenuItem logout;
+    private Menu userMenu;
+    private MenuItem logoutItem;
     
-    private static Pane leftPane;
-    private  static File inputFile;
-    private  static PDDocument inputDocument;
-    private static int currentInputPage;
-    private  static Image inputImage;
-    private  static ImageView inputView;
+    private Pane leftPane;
+    private  File inputFile;
+    private  PDDocument inputDocument;
+    private int currentInputPage;
+    private  Image inputImage;
+    private  ImageView inputView;
     
-    private static Pane rightPane;
-    private  static File outputFile;
-    private  static PDDocument outputDocument;
-    private static int currentOutputPage;
-    private  static Image outputImage;
-    private  static ImageView outputView;
+    private Pane rightPane;
+    private  File outputFile;
+    private  PDDocument outputDocument;
+    private int currentOutputPage;
+    private  Image outputImage;
+    private  ImageView outputView;
     
-    private static PDFRenderer inputRenderer;
-    private static PDFRenderer outputRenderer;
+    private PDFRenderer inputRenderer;
+    private PDFRenderer outputRenderer;
     
-    private static Text output = new Text();
+    private Text output = new Text();
     
-    public UserMenu(){
+    private HandyAndyApplication application;
+    
+    public UserMenu(HandyAndyApplication application){
+        this.application = application;
         menuBar = new MenuBar();
         inputView = new ImageView();
         leftPane = new StackPane();
@@ -72,9 +75,9 @@ public final class UserMenu extends BorderPane{
         fileMenu.getItems().add(openFile);
         
         userMenu = new Menu("User");
-        logout = new MenuItem("Logout");
-        logout.setOnAction(new LogoutHandler());
-        userMenu.getItems().add(logout);
+        logoutItem = new MenuItem("Logout");
+        logoutItem.setOnAction(event -> logout(event));
+        userMenu.getItems().add(logoutItem);
         
         menuBar.getMenus().addAll(fileMenu, userMenu);
         
@@ -94,36 +97,34 @@ public final class UserMenu extends BorderPane{
         File file = fileChooser.showOpenDialog(stage);
         if(file != null){
             try{
-                inputFile = file;
-                inputDocument = PDDocument.load(file);
-                inputRenderer = new PDFRenderer(inputDocument);
-                currentInputPage = 0;
-                BufferedImage bInputImage = inputRenderer.renderImage(currentInputPage);
-                inputImage = SwingFXUtils.toFXImage(bInputImage, null);
-                inputView = new ImageView();
-                inputView.setImage(inputImage);
-                leftPane.getChildren().add(inputView);
-                setLeft(leftPane);
+                this.inputFile = file;
+                this.inputDocument = PDDocument.load(file);
+                this.inputRenderer = new PDFRenderer(inputDocument);
+                this.currentInputPage = 0;
+                this.inputImage = SwingFXUtils.toFXImage(inputRenderer.renderImage(currentInputPage), null);
+                this.inputView = new ImageView();
+                this.inputView.setImage(inputImage);
+                this.leftPane.getChildren().add(inputView);
+                this.setLeft(leftPane);
                 
                 /*
-                outputDocument = JensenPropertyManagementParser.parse(inputFile);
+                this.outputDocument = JensenPropertyManagementParser.parse(inputFile);
                 System.out.println(outputDocument.getNumberOfPages());
-                outputRenderer = new PDFRenderer(outputDocument);
-                currentOutputPage = 0;
-                BufferedImage bOutputImage = outputRenderer.renderImage(currentOutputPage);
-                outputImage = SwingFXUtils.toFXImage(bOutputImage, null);
-                outputView = new ImageView();
-                outputView.setImage(outputImage);
-                rightPane.getChildren().add(outputView);
-                setRight(rightPane);
+                this.outputRenderer = new PDFRenderer(outputDocument);
+                this.currentOutputPage = 0;
+                this.outputImage = SwingFXUtils.toFXImage(outputRenderer.renderImage(currentOutputPage), null);
+                this.outputView = new ImageView();
+                this.outputView.setImage(outputImage);
+                this.rightPane.getChildren().add(outputView);
+                this.setRight(rightPane);
                 */
                 
                 
                 PDFTextStripper pdfStripper = new PDFTextStripper();
                 String text = pdfStripper.getText(inputDocument);
-                output.setText(text);
-                rightPane.getChildren().add(output);
-                setRight(rightPane);
+                this.output.setText(text);
+                this.rightPane.getChildren().add(output);
+                this.setRight(rightPane);
                 
                 
             }
@@ -135,12 +136,11 @@ public final class UserMenu extends BorderPane{
     
     private void scrollInput(ScrollEvent e){
         if(e.getDeltaY() > 0){
-            if(currentInputPage != 0){
+            if(this.currentInputPage != 0){
                 try{
-                    currentInputPage--;
-                    BufferedImage bImage = inputRenderer.renderImage(currentInputPage);
-                    inputImage = SwingFXUtils.toFXImage(bImage, null);
-                    inputView.setImage(inputImage);
+                    this.currentInputPage--;
+                    this.inputImage = SwingFXUtils.toFXImage(this.inputRenderer.renderImage(this.currentInputPage), null);
+                    this.inputView.setImage(inputImage);
                 }
                 catch(IOException ex){
                     ex.printStackTrace();
@@ -148,12 +148,11 @@ public final class UserMenu extends BorderPane{
             }
         }
         else if(e.getDeltaY() < 0){
-            if(currentInputPage != inputDocument.getNumberOfPages() && (currentInputPage + 1 ) < inputDocument.getNumberOfPages()){
+            if(this.currentInputPage != this.inputDocument.getNumberOfPages() && (this.currentInputPage + 1 ) < this.inputDocument.getNumberOfPages()){
                 try{
-                    currentInputPage++;
-                    BufferedImage bImage = inputRenderer.renderImage(currentInputPage);
-                    inputImage = SwingFXUtils.toFXImage(bImage, null);
-                    inputView.setImage(inputImage);
+                    this.currentInputPage++;
+                    this.inputImage = SwingFXUtils.toFXImage(this.inputRenderer.renderImage(this.currentInputPage), null);
+                    this.inputView.setImage(this.inputImage);
                 }
                 catch(IOException ex){
                     ex.printStackTrace();
@@ -162,12 +161,18 @@ public final class UserMenu extends BorderPane{
         }
     }
     
-    public static void close() throws IOException{
-        if(inputDocument != null){
-            inputDocument.close();
+    public void close() throws IOException{
+        if(this.inputDocument != null){
+            this.inputDocument.close();
         }
-        if(outputDocument != null){
-            outputDocument.close();
+        if(this.outputDocument != null){
+            this.outputDocument.close();
         }
     }
+    
+    public void logout(ActionEvent e){
+        this.application.setCurrentUser(null);
+        this.application.changeToLoginMenu();
+    }
+    
 }
