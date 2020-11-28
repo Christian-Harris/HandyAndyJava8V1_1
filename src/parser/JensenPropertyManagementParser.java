@@ -1,7 +1,12 @@
 package parser;
 
+import application.editor.Editor;
+import application.editor.Room;
+import application.editor.RoomItem;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -9,42 +14,53 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.fontbox.type1.Type1Font;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
  *
  * @author Christian Harris
  */
 public final class JensenPropertyManagementParser {
-    /*
-    public static PDDocument parse(File file) throws IOException{
-        PDDocument inputDocument;
-        PDDocument outputDocument = new PDDocument();
-        PDPage firstPage = new PDPage();
-        outputDocument.addPage(firstPage);
-        
-        PDFont font = PDType1Font.HELVETICA;
-        PDPageContentStream contentStream = new PDPageContentStream(outputDocument, firstPage);
-        contentStream.beginText();
-        contentStream.setFont(font, 12);
-        contentStream.setLeading(12);
-        contentStream.newLineAtOffset(25, 725);
-        contentStream.showText("Handy Andy");
-        contentStream.newLine();
-        contentStream.showText("Oh Yea");
-        contentStream.newLine();
-        contentStream.showText("sup?");
-        contentStream.newLine();
-        contentStream.endText();
-        contentStream.close();
+    
+    public static Editor parse(File file){
+        Editor editor = new Editor();
         try{
-            inputDocument = PDDocument.load(file);
+            PDDocument document = PDDocument.load(file);
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            String text = pdfStripper.getText(document);
+            Scanner parser = new Scanner(text);
+            //Extract off the job number and the address.
+            while(parser.hasNext()){
+                //First we find the first instance of For:
+                if(parser.next().equalsIgnoreCase("For:")){
+                    editor.setJobNumber(parser.next());
+                    parser.useDelimiter("\n");
+                    editor.setAddress(parser.next() + parser.next());
+                    parser.next();
+                    parser.next();
+                    parser.next();
+                    parser.next();
+                    break;
+                }
+            }
+            //Now we construct each room and the room items.
+            Room room = new Room();
+            while(parser.hasNext()){
+                if(parser.hasNext("[RPL]++") || parser.hasNext("[RPR]++")){
+                    room.addRoomItem(new RoomItem(parser.next()));
+                }
+                else{
+                    room = new Room(parser.next());
+                    editor.addRoom(room);
+                    System.out.println(room.expandedProperty().toString());
+                }
+            }
+            
         }
         catch(IOException ex){
             ex.printStackTrace();
         }
-        return outputDocument;
-    }*/
-    public static void parse(File file){
         
+        return editor;
     }
 }

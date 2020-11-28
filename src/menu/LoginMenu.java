@@ -1,6 +1,5 @@
 package menu;
 
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -11,28 +10,27 @@ import javafx.scene.layout.HBox;
 
 import handler.LoginHandler;
 import application.HandyAndyApplication;
-import javafx.application.Application;
 
 /**
  *
  * @author Christian Harris
  */
-public class LoginMenu extends Pane{
+public final class LoginMenu extends Pane{
     
-    private VBox loginBox;
+    private final VBox loginBox;
     
-    private Label userLabel;
-    private TextField userTextField;
-    private HBox userBox;
+    private final Label userLabel;
+    private final TextField userTextField;
+    private final HBox userBox;
     
-    private Label passwordLabel;
-    private PasswordField passwordField;
-    private HBox passwordBox;
+    private final Label passwordLabel;
+    private final PasswordField passwordField;
+    private final HBox passwordBox;
     
-    private Button loginButton;
+    private final Button loginButton;
     
-    private Label loginMessage;
-    private HandyAndyApplication application;
+    private final Label loginMessage;
+    private final HandyAndyApplication application;
     
     public LoginMenu(HandyAndyApplication application){
         this.application = application;

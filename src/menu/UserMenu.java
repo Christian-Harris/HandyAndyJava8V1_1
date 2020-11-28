@@ -126,7 +126,8 @@ public final class UserMenu extends BorderPane{
                 this.rightPane.getChildren().add(outputView);
                 this.setRight(rightPane);
                 */
-                editor = new Editor();
+                editor = JensenPropertyManagementParser.parse(file);
+                //editor = Editor.testBuild();
                 this.centerPane.getChildren().clear();
                 this.centerPane.getChildren().add(editor);
                 this.setCenter(centerPane);
