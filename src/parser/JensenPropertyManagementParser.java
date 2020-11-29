@@ -24,6 +24,38 @@ public final class JensenPropertyManagementParser {
     
     public static Editor parse(File file){
         Editor editor = new Editor();
+        
+        try{
+            PDDocument document = PDDocument.load(file);
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            String text = pdfStripper.getText(document);
+            Scanner parser = new Scanner(text);
+            //Extract off the job number and the address.
+            while(parser.hasNext()){
+                if(parser.next().equalsIgnoreCase("For:")){
+                    editor.setJobNumber(parser.next());
+                    String address = "";
+                    while(true){
+                        String temp = parser.next();
+                        if(!temp.equalsIgnoreCase("Inspected")){
+                            address += (temp + " ");
+                        }
+                        else{
+                            address = address.trim();
+                            editor.setAddress(address);
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            parser.reset();
+            document.close();
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
+        /*
         try{
             PDDocument document = PDDocument.load(file);
             PDFTextStripper pdfStripper = new PDFTextStripper();
@@ -52,7 +84,6 @@ public final class JensenPropertyManagementParser {
                 else{
                     room = new Room(parser.next());
                     editor.addRoom(room);
-                    System.out.println(room.expandedProperty().toString());
                 }
             }
             
@@ -60,6 +91,7 @@ public final class JensenPropertyManagementParser {
         catch(IOException ex){
             ex.printStackTrace();
         }
+        */
         
         return editor;
     }

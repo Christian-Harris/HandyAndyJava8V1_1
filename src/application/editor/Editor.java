@@ -1,11 +1,10 @@
 package application.editor;
 
-import java.util.ArrayList;
-
 import javafx.scene.control.Accordion;
-import javafx.scene.control.TitledPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 /**
  *
@@ -14,47 +13,54 @@ import javafx.scene.layout.VBox;
 
 public final class Editor extends VBox{
     
-    String jobNumber;
-    String address;
-    private static ArrayList<Room> rooms;
-    private static Accordion editor;
+    private final TextField jobNumber;
+    private final TextField address;
+    private final HBox jobInfo;
+    private final Accordion editor;
+    private final Button newRoom;
+    private final HBox controlPane;
+    
     
     public Editor(){
-        rooms = new ArrayList<Room>();
+        jobNumber = new TextField("");
+        address = new TextField("");
+        jobInfo = new HBox(12, jobNumber, address);
         editor = new Accordion();
-        this.getChildren().add(editor);
+        newRoom = new Button("New Room");
+        controlPane = new HBox(12, newRoom);
+        this.getChildren().addAll(jobInfo, editor, controlPane);
     }
     
     public void setJobNumber(String jobNumber){
-        this.jobNumber = jobNumber;
+        this.jobNumber.setText(jobNumber);
+    }
+    
+    public String getJobNumber(){
+        return this.jobNumber.getText();
     }
     
     public void setAddress(String address){
-        this.address = address;
+        this.address.setText(address);
     }
     
-    protected void update(){
-        editor.getPanes().clear();
-        editor.getPanes().add(new TitledPane(jobNumber, new Pane()));
-        editor.getPanes().addAll(rooms);
+    public String getAddress(){
+        return this.address.getText();
     }
     
     public void addRoom(Room room){
-        rooms.add(room);
-        update();
-    }
-    
-    public void removeRoom(Room room){
-        rooms.remove(room);
-        update();
+        editor.getPanes().add(0, room);
     }
     
     public static Editor testBuild(){
         Editor testEditor = new Editor();
-        testEditor.setJobNumber("1234");
+        testEditor.setJobNumber("Job Number");
+        testEditor.setAddress("Address");
         Room room = new Room("My Room");
-        RoomItem roomItem = new RoomItem("Clean");
-        room.addRoomItem(roomItem);
+        RoomItem roomItem1 = new RoomItem("Room Item 1");
+        RoomItem roomItem2 = new RoomItem("Room Item 2");
+        
+        room.addRoomItem(roomItem1);
+        room.addRoomItem(roomItem2);
         testEditor.addRoom(room);
         return testEditor;
     }

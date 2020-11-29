@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import javafx.event.ActionEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -99,6 +100,24 @@ public final class UserMenu extends BorderPane{
     
     
     private void openFile(ActionEvent e){
+        if(inputDocument != null && !(inputDocument.getDocument().isClosed())){
+            try{
+                inputDocument.close();
+            }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        
+        if(outputDocument != null && (outputDocument.getDocument().isClosed())){
+            try{
+                outputDocument.close();
+            }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
+        }
+        
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         File file = fileChooser.showOpenDialog(stage);
@@ -126,10 +145,13 @@ public final class UserMenu extends BorderPane{
                 this.rightPane.getChildren().add(outputView);
                 this.setRight(rightPane);
                 */
-                editor = JensenPropertyManagementParser.parse(file);
-                //editor = Editor.testBuild();
+               // editor = JensenPropertyManagementParser.parse(file);
+                editor = Editor.testBuild();
+                ScrollPane editorScroller = new ScrollPane();
+                editorScroller.setContent(editor);
                 this.centerPane.getChildren().clear();
-                this.centerPane.getChildren().add(editor);
+                
+                this.centerPane.getChildren().add(editorScroller);
                 this.setCenter(centerPane);
                 
                 
