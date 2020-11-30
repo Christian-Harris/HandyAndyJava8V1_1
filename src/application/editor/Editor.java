@@ -5,6 +5,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 
 /**
  *
@@ -13,8 +14,12 @@ import javafx.scene.control.TextField;
 
 public final class Editor extends VBox{
     
+    private final Label jobNumberLabel;
+    private final Label addressLabel;
+    private final VBox jobInfoLabel;
     private final TextField jobNumber;
     private final TextField address;
+    private final VBox jobInfoText;
     private final HBox jobInfo;
     private final Accordion editor;
     private final Button newRoom;
@@ -22,9 +27,13 @@ public final class Editor extends VBox{
     
     
     public Editor(){
+        jobNumberLabel = new Label("Job Number:");
+        addressLabel = new Label("Address:");
         jobNumber = new TextField("");
         address = new TextField("");
-        jobInfo = new HBox(12, jobNumber, address);
+        jobInfoLabel = new VBox(jobNumberLabel, addressLabel);
+        jobInfoText = new VBox(jobNumber, address);
+        jobInfo = new HBox(jobInfoLabel, jobInfoText);
         editor = new Accordion();
         newRoom = new Button("New Room");
         controlPane = new HBox(12, newRoom);
@@ -48,7 +57,8 @@ public final class Editor extends VBox{
     }
     
     public void addRoom(Room room){
-        editor.getPanes().add(0, room);
+        //editor.getPanes().add(0, room);
+        editor.getPanes().add(room);
     }
     
     public static Editor testBuild(){

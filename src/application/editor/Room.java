@@ -63,7 +63,8 @@ public final class Room extends TitledPane{
     }
     
     public void addRoomItem(RoomItem roomItem){
-        this.contentPane.getChildren().add(0, roomItem);
+        //this.contentPane.getChildren().add(0, roomItem);
+        this.contentPane.getChildren().add(roomItem);
     }
     
     /*public void update(){

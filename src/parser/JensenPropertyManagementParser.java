@@ -7,6 +7,7 @@ import application.editor.RoomItem;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -49,49 +50,58 @@ public final class JensenPropertyManagementParser {
                     break;
                 }
             }
-            parser.reset();
+            int numberOfPages = document.getNumberOfPages();
+            for(int i = 0; i < numberOfPages; i++){
+                parser.reset();
+                parser.useDelimiter("\n");
+                while(parser.hasNext()){
+                    if(!parser.nextLine().equalsIgnoreCase("Condition Notes")){
+                        continue;
+                    }
+                    else{
+                        break;
+                    }
+                }
+                Room currentRoom = new Room();
+                while(parser.hasNext()){
+                    String nextLine = parser.next();
+                    if(nextLine.toLowerCase().contains("move-out pictures")){
+                        break;
+                    }
+                    if(nextLine.toLowerCase().contains("(cont'd)")){
+                        continue;
+                    }
+                    if(nextLine.toLowerCase().contains("report generated")){
+                        continue;
+                    }
+                    if(nextLine.toLowerCase().contains("note:")){
+                        continue;
+                    }
+                    if(nextLine.toLowerCase().contains("amer pride:")){
+                        continue;
+                    }
+                    if(nextLine.toLowerCase().contains("atlas")){
+                        continue;
+                    }
+                    if(nextLine.toLowerCase().contains("condition notes")){
+                        continue;
+                    }
+                    if(!nextLine.toLowerCase().contains("rpr") && !nextLine.toLowerCase().contains("rpl")){
+                        currentRoom = new Room(nextLine);
+                        editor.addRoom(currentRoom);
+                        //System.out.println("Room: " + nextLine);
+                    }
+                    else if (nextLine.toLowerCase().contains("rpr") || nextLine.toLowerCase().contains("rpl")){
+                        currentRoom.addRoomItem(new RoomItem(nextLine));
+                        //System.out.println("Item: " + nextLine);
+                    }
+                }
+            }
             document.close();
         }
         catch(IOException ex){
             ex.printStackTrace();
         }
-        /*
-        try{
-            PDDocument document = PDDocument.load(file);
-            PDFTextStripper pdfStripper = new PDFTextStripper();
-            String text = pdfStripper.getText(document);
-            Scanner parser = new Scanner(text);
-            //Extract off the job number and the address.
-            while(parser.hasNext()){
-                //First we find the first instance of For:
-                if(parser.next().equalsIgnoreCase("For:")){
-                    editor.setJobNumber(parser.next());
-                    parser.useDelimiter("\n");
-                    editor.setAddress(parser.next() + parser.next());
-                    parser.next();
-                    parser.next();
-                    parser.next();
-                    parser.next();
-                    break;
-                }
-            }
-            //Now we construct each room and the room items.
-            Room room = new Room();
-            while(parser.hasNext()){
-                if(parser.hasNext("[RPL]++") || parser.hasNext("[RPR]++")){
-                    room.addRoomItem(new RoomItem(parser.next()));
-                }
-                else{
-                    room = new Room(parser.next());
-                    editor.addRoom(room);
-                }
-            }
-            
-        }
-        catch(IOException ex){
-            ex.printStackTrace();
-        }
-        */
         
         return editor;
     }

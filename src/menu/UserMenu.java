@@ -38,34 +38,34 @@ public final class UserMenu extends BorderPane{
     private final MenuBar menuBar;
     
     private final Menu fileMenu;
-    private MenuItem openFile;
+    private final MenuItem openFile;
     
     private final Menu userMenu;
     private final MenuItem logoutItem;
     
-    private Pane leftPane;
+    private final Pane leftPane;
     private  File inputFile;
     private  PDDocument inputDocument;
     private int currentInputPage;
     private  Image inputImage;
     private  ImageView inputView;
     
-    private Pane rightPane;
+    private final Pane rightPane;
     private  File outputFile;
     private  PDDocument outputDocument;
     private int currentOutputPage;
     private  Image outputImage;
     private  ImageView outputView;
     
-    private Pane centerPane;
+    private final Pane centerPane;
     
     private PDFRenderer inputRenderer;
     private PDFRenderer outputRenderer;
     private Editor editor;
     
-    private Text output = new Text();
+    private final Text output = new Text();
     
-    private HandyAndyApplication application;
+    private final HandyAndyApplication application;
     
     public UserMenu(HandyAndyApplication application){
         this.application = application;
@@ -87,12 +87,12 @@ public final class UserMenu extends BorderPane{
         
         menuBar.getMenus().addAll(fileMenu, userMenu);
         
-        leftPane.setStyle("-fx-border-color: grey; -fx-border-width: 5px; -fx-alignment: top-center");
+        leftPane.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-alignment: top-center");
         leftPane.setOnScroll(event -> scrollInput(event));
         
-        rightPane.setStyle("-fx-border-color: grey; -fx-border-width: 5px; -fx-alignment: center");
+        rightPane.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-alignment: center");
         
-        centerPane.setStyle("-fx-border-color: grey; -fx-border-width: 5px; -fx-alignment: center");
+        centerPane.setStyle("-fx-border-color: grey; -fx-border-width: 2px 1px 2px 1px; -fx-alignment: center");
         
         
         this.setTop(menuBar);
@@ -145,8 +145,8 @@ public final class UserMenu extends BorderPane{
                 this.rightPane.getChildren().add(outputView);
                 this.setRight(rightPane);
                 */
-               // editor = JensenPropertyManagementParser.parse(file);
-                editor = Editor.testBuild();
+                editor = JensenPropertyManagementParser.parse(file);
+                //editor = Editor.testBuild();
                 ScrollPane editorScroller = new ScrollPane();
                 editorScroller.setContent(editor);
                 this.centerPane.getChildren().clear();
