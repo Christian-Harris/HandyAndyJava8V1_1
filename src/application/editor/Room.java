@@ -2,6 +2,7 @@ package application.editor;
 
 //import java.util.ArrayList;
 
+import handler.NewRoomItemHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
@@ -14,8 +15,7 @@ import javafx.scene.control.CheckBox;
  */
 public final class Room extends TitledPane{
     
-    //private final ArrayList<RoomItem> roomItems;
-    
+    private final Editor editor;
     private final VBox contentPane;
     private final VBox roomItemPane;
     private final HBox controlPane;
@@ -24,10 +24,10 @@ public final class Room extends TitledPane{
     private final Button renameRoom;
     private final CheckBox checkBox;
     
-    public Room(){
-        //roomItems = new ArrayList<RoomItem>();
-        
+    public Room(Editor editor){
+        this.editor = editor;
         newItem = new Button("New Item");
+        newItem.setOnAction(new NewRoomItemHandler(this));
         renameRoom = new Button("Rename Room");
         checkBox = new CheckBox();
         checkBox.setSelected(true);
@@ -41,13 +41,14 @@ public final class Room extends TitledPane{
         this.setContent(contentPane);
     }
     
-    public Room(String text){
-        this();
+    public Room(Editor editor, String text){
+        this(editor);
         this.setText(text);
     }
     
     public void setTitle(String title){
         this.setText(title);
+        this.update();
     }
     
     public String getTitle(){
@@ -75,8 +76,7 @@ public final class Room extends TitledPane{
         return this.roomItemPane.getChildren().size();
     }
     
-    /*public void update(){
-        contentPane.getChildren().clear();
-        contentPane.getChildren().addAll(this.roomItems);
-    }*/
+    public void update(){
+        editor.generate();
+    }
 }

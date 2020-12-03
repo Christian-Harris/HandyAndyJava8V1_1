@@ -139,15 +139,17 @@ public final class UserMenu extends BorderPane{
                 this.centerPane.getChildren().add(editorScroller);
                 this.setCenter(centerPane);
                 
-                this.outputDocument = editor.generateDocument();
-                this.outputRenderer = new PDFRenderer(outputDocument);
-                this.currentOutputPage = 0;
-                this.outputImage = SwingFXUtils.toFXImage(outputRenderer.renderImage(currentOutputPage), null);
-                this.outputView = new ImageView();
-                this.outputView.setImage(outputImage);
+                
+               // this.outputDocument = editor.getDocument();
+                //this.outputRenderer = new PDFRenderer(outputDocument);
+                //this.currentOutputPage = 0;
+                //this.outputImage = SwingFXUtils.toFXImage(outputRenderer.renderImage(currentOutputPage), null);
+                //this.outputView = new ImageView();
+                //this.outputView.setImage(outputImage);
                 this.rightPane.getChildren().clear();
-                this.rightPane.getChildren().add(outputView);
+                this.rightPane.getChildren().add(editor.getDocumentView());
                 this.setRight(rightPane);
+                
             }
             catch(IOException ex){
                 ex.printStackTrace();

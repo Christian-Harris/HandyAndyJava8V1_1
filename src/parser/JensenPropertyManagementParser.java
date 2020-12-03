@@ -7,14 +7,8 @@ import application.editor.RoomItem;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.fontbox.type1.Type1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
@@ -62,7 +56,7 @@ public final class JensenPropertyManagementParser {
                         break;
                     }
                 }
-                Room currentRoom = new Room();
+                Room currentRoom = new Room(editor);
                 while(parser.hasNext()){
                     String nextLine = parser.next().trim();
                     if(nextLine.toLowerCase().contains("move-out pictures")){
@@ -87,12 +81,12 @@ public final class JensenPropertyManagementParser {
                         continue;
                     }
                     if(!nextLine.toLowerCase().contains("rpr") && !nextLine.toLowerCase().contains("rpl")){
-                        currentRoom = new Room(nextLine);
+                        currentRoom = new Room(editor, nextLine);
                         editor.addRoom(currentRoom);
                         //System.out.println("Room: " + nextLine);
                     }
                     else if (nextLine.toLowerCase().contains("rpr") || nextLine.toLowerCase().contains("rpl")){
-                        currentRoom.addRoomItem(new RoomItem(nextLine));
+                        currentRoom.addRoomItem(new RoomItem(currentRoom, nextLine));
                         //System.out.println("Item: " + nextLine);
                     }
                 }
@@ -102,7 +96,8 @@ public final class JensenPropertyManagementParser {
         catch(IOException ex){
             ex.printStackTrace();
         }
-        
+        editor.generateDocument();
+        editor.generateImage();
         return editor;
     }
 }

@@ -18,7 +18,8 @@ public class NewRoomHandler implements EventHandler<ActionEvent>{
     
     @Override
     public void handle(ActionEvent e){
-        this.editor.addRoom(new Room());
+        this.editor.addRoom(new Room(editor));
+        this.editor.generate();
     }
     
     

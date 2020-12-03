@@ -12,11 +12,12 @@ import javafx.scene.layout.VBox;
  * @author Christian Harris
  */
 public final class RoomItem extends HBox{
-    
+    private final Room room;
     private final TextArea textArea;
     private final CheckBox checkBox;
     
-    public RoomItem(){
+    public RoomItem(Room room){
+        this.room = room;
         textArea = new TextArea("");
         textArea.setWrapText(true);
         checkBox = new CheckBox();
@@ -24,8 +25,8 @@ public final class RoomItem extends HBox{
         this.getChildren().addAll(checkBox, textArea);
     }
     
-    public RoomItem(String text){
-        this();
+    public RoomItem(Room room, String text){
+        this(room);
         textArea.setText(text);
     }
     
@@ -35,5 +36,9 @@ public final class RoomItem extends HBox{
     
     public boolean isSelected(){
         return this.checkBox.isSelected();
+    }
+    
+    public void update(){
+        room.update();
     }
 }

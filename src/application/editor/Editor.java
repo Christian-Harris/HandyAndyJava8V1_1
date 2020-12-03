@@ -2,16 +2,20 @@ package application.editor;
 
 import handler.NewRoomHandler;
 import java.io.IOException;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Accordion;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.rendering.PDFRenderer;
 
 /**
  *
@@ -32,6 +36,9 @@ public final class Editor{
     private final HBox controlPane;
     private final VBox editorBox;
     
+    private PDDocument document;
+    private ImageView documentView;
+    private int currentOutputPage;
     
     public Editor(){
         jobNumberLabel = new Label("Job Number:");
@@ -45,8 +52,10 @@ public final class Editor{
         newRoom = new Button("New Room");
         newRoom.setOnAction(new NewRoomHandler(this));
         controlPane = new HBox(12, newRoom);
-        this.editorBox = new VBox(jobInfo, editor, controlPane);
-        this.editorBox.setStyle("-fx-padding: 24px");
+        editorBox = new VBox(jobInfo, editor, controlPane);
+        editorBox.setStyle("-fx-padding: 24px");
+        currentOutputPage = 0;
+        documentView = new ImageView();
     }
     
     public void setJobNumber(String jobNumber){
@@ -70,21 +79,7 @@ public final class Editor{
         editor.getPanes().add(room);
     }
     
-    public static Editor testBuild(){
-        Editor testEditor = new Editor();
-        testEditor.setJobNumber("Job Number");
-        testEditor.setAddress("Address");
-        Room room = new Room("My Room");
-        RoomItem roomItem1 = new RoomItem("Room Item 1");
-        RoomItem roomItem2 = new RoomItem("Room Item 2");
-        
-        room.addRoomItem(roomItem1);
-        room.addRoomItem(roomItem2);
-        testEditor.addRoom(room);
-        return testEditor;
-    }
-    
-    public PDDocument generateDocument(){
+    public void generateDocument(){
         float margin = 18.0f;
         float tab = 9.0f;
         float leading = 14.0f;
@@ -126,10 +121,35 @@ public final class Editor{
         catch(IOException ex){
             ex.printStackTrace();
         }
-        return document;
+        this.document = document;
+        //return document;
+    }
+    
+    public void generateImage(){
+        PDFRenderer renderer = new PDFRenderer(this.document);
+        try{
+            Image image = SwingFXUtils.toFXImage(renderer.renderImage(this.currentOutputPage), null);
+            this.documentView.setImage(image);
+        }
+        catch(IOException ex){
+            ex.printStackTrace();
+        }
     }
     
     public VBox getEditorBox(){
         return this.editorBox;
+    }
+    
+    public PDDocument getDocument(){
+        return this.document;
+    }
+    
+    public ImageView getDocumentView(){
+        return this.documentView;
+    }
+    
+    public void generate(){
+        this.generateDocument();
+        this.generateImage();
     }
 }
