@@ -63,8 +63,6 @@ public final class UserMenu extends BorderPane{
     private PDFRenderer outputRenderer;
     private Editor editor;
     
-    //private final Text output = new Text();
-    
     private final HandyAndyApplication application;
     
     public UserMenu(HandyAndyApplication application){
@@ -136,7 +134,7 @@ public final class UserMenu extends BorderPane{
                 
                 editor = JensenPropertyManagementParser.parse(file);
                 ScrollPane editorScroller = new ScrollPane();
-                editorScroller.setContent(editor);
+                editorScroller.setContent(editor.getEditorBox());
                 this.centerPane.getChildren().clear();
                 this.centerPane.getChildren().add(editorScroller);
                 this.setCenter(centerPane);

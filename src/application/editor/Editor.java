@@ -18,7 +18,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
  * @author Christian Harris
  */
 
-public final class Editor extends VBox{
+public final class Editor{
     
     private final Label jobNumberLabel;
     private final Label addressLabel;
@@ -30,6 +30,7 @@ public final class Editor extends VBox{
     private final Accordion editor;
     private final Button newRoom;
     private final HBox controlPane;
+    private final VBox editorBox;
     
     
     public Editor(){
@@ -44,8 +45,8 @@ public final class Editor extends VBox{
         newRoom = new Button("New Room");
         newRoom.setOnAction(new NewRoomHandler(this));
         controlPane = new HBox(12, newRoom);
-        this.setStyle("-fx-padding: 24px");
-        this.getChildren().addAll(jobInfo, editor, controlPane);
+        this.editorBox = new VBox(jobInfo, editor, controlPane);
+        this.editorBox.setStyle("-fx-padding: 24px");
     }
     
     public void setJobNumber(String jobNumber){
@@ -104,13 +105,6 @@ public final class Editor extends VBox{
             contentStream.showText("Address: " + this.address.getText());
             contentStream.newLine();
             contentStream.newLine();
-            /*
-            contentStream.showText("This line should not be indented.");
-            contentStream.newLineAtOffset(tab, -leading);
-            contentStream.showText("This line should be indented.");
-            contentStream.newLineAtOffset(-tab, -leading);
-            contentStream.showText("This line should not be indented.");
-            */
             
             for(int i = 0; i < this.editor.getPanes().size(); i++){
                 Room currentRoom = (Room)this.editor.getPanes().get(i);
@@ -133,5 +127,9 @@ public final class Editor extends VBox{
             ex.printStackTrace();
         }
         return document;
+    }
+    
+    public VBox getEditorBox(){
+        return this.editorBox;
     }
 }
