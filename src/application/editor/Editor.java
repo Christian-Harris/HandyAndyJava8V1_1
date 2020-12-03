@@ -1,5 +1,6 @@
 package application.editor;
 
+import java.util.ArrayList;
 import handler.NewRoomHandler;
 import handler.UpdateHandler;
 import java.io.IOException;
@@ -42,6 +43,8 @@ public final class Editor{
     private ImageView documentView;
     private int currentOutputPage;
     
+    private final ArrayList<String> workOrderUsers;
+    
     public Editor(){
         UpdateHandler updateHandler = new UpdateHandler(this);
         jobNumberLabel = new Label("Job Number:");
@@ -63,6 +66,7 @@ public final class Editor{
         editorBox.setStyle("-fx-padding: 24px");
         currentOutputPage = 0;
         documentView = new ImageView();
+        workOrderUsers = new ArrayList<String>();
     }
     
     public void setJobNumber(String jobNumber){
@@ -166,5 +170,23 @@ public final class Editor{
     public void generate(){
         this.generateDocument();
         this.generateImage();
+    }
+    
+    public boolean hasUser(String username){
+        boolean value = false;
+        for(int i = 0; i < this.workOrderUsers.size(); i++){
+            if(this.workOrderUsers.get(i).equals(username)){
+                value = true;
+            }
+        }
+        return value;
+    }
+    
+    public void addWorkOrderUser(String username){
+        this.workOrderUsers.add(username);
+    }
+    
+    public void clearWorkOrderUsers(){
+        this.workOrderUsers.clear();
     }
 }

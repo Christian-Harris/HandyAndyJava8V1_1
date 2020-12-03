@@ -22,11 +22,16 @@ import user.UserType;
  * @author Christian Harris
  */
 public class LoginHandler implements EventHandler<ActionEvent>{
+    private final LoginMenu loginMenu;
+    
+    public LoginHandler(LoginMenu loginMenu){
+        this.loginMenu = loginMenu;
+    }
     @Override
     public void handle(ActionEvent e){   
         try{
-            LoginMenu loginMenu = ((LoginMenu)((VBox)((Button)e.getSource()).getParent()).getParent());
-            Connection databaseConnection = loginMenu.getApplication().getDatabaseConnection(); 
+            //LoginMenu loginMenu = ((LoginMenu)((VBox)((Button)e.getSource()).getParent()).getParent());
+            Connection databaseConnection = loginMenu.getDatabaseConnection(); 
             String query = "SELECT * from users WHERE username = " + "'" + loginMenu.getUsername() + "'";
             PreparedStatement statement = databaseConnection.prepareStatement(query);
             ResultSet resultSet = statement.executeQuery();

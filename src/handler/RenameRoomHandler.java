@@ -27,7 +27,7 @@ public class RenameRoomHandler implements EventHandler<ActionEvent>{
     
     @Override
     public void handle(ActionEvent e){
-        Confirm confirmHandler = new Confirm();
+        ConfirmHandler confirmHandler = new ConfirmHandler();
         stage = new Stage();
         pane = new VBox();
         textField = new TextField("");
@@ -40,7 +40,7 @@ public class RenameRoomHandler implements EventHandler<ActionEvent>{
         stage.show();
     }
     
-    class Confirm implements EventHandler<ActionEvent>{
+    class ConfirmHandler implements EventHandler<ActionEvent>{
         @Override
         public void handle(ActionEvent e){
             room.setText(textField.getText());

@@ -11,6 +11,8 @@ import javafx.scene.layout.HBox;
 import handler.LoginHandler;
 import application.HandyAndyApplication;
 
+import java.sql.Connection;
+
 /**
  *
  * @author Christian Harris
@@ -43,7 +45,7 @@ public final class LoginMenu extends Pane{
         passwordBox = new HBox(passwordLabel, passwordField);
         
         loginButton = new Button("Login");
-        loginButton.setOnAction(new LoginHandler());
+        loginButton.setOnAction(new LoginHandler(this));
         
         loginMessage = new Label("");
         
@@ -73,5 +75,9 @@ public final class LoginMenu extends Pane{
     
     public HandyAndyApplication getApplication(){
         return this.application;
+    }
+    
+    public Connection getDatabaseConnection(){
+        return this.application.getDatabaseConnection();
     }
 }

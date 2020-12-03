@@ -17,9 +17,12 @@ import javafx.stage.Stage;
 
 import application.HandyAndyApplication;
 import application.editor.Editor;
+import handler.AddUserToWorkOrderHandler;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+
 
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -39,6 +42,7 @@ public final class UserMenu extends BorderPane{
     
     private final Menu userMenu;
     private final MenuItem logoutItem;
+    private final MenuItem addUserToWorkOrderItem;
     
     private final Pane leftPane;
     private  File inputFile;
@@ -73,7 +77,9 @@ public final class UserMenu extends BorderPane{
         userMenu = new Menu("User");
         logoutItem = new MenuItem("Logout");
         logoutItem.setOnAction(event -> logout(event));
-        userMenu.getItems().add(logoutItem);
+        addUserToWorkOrderItem = new MenuItem("Add User");
+        addUserToWorkOrderItem.setOnAction(new AddUserToWorkOrderHandler(this));
+        userMenu.getItems().addAll(logoutItem, addUserToWorkOrderItem);
         
         menuBar.getMenus().addAll(fileMenu, userMenu);
         
@@ -176,6 +182,14 @@ public final class UserMenu extends BorderPane{
     public void logout(ActionEvent e){
         this.application.setCurrentUser(null);
         this.application.changeToLoginMenu();
+    }
+    
+    public Connection getDatabaseConnection(){
+        return this.application.getDatabaseConnection();
+    }
+    
+    public Editor getEditor(){
+        return this.editor;
     }
     
 }
