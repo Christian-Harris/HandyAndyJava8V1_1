@@ -1,6 +1,7 @@
 package application.editor;
 
 import handler.NewRoomHandler;
+import handler.UpdateHandler;
 import java.io.IOException;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.Accordion;
@@ -33,6 +34,7 @@ public final class Editor{
     private final HBox jobInfo;
     private final Accordion editor;
     private final Button newRoom;
+    private final Button update;
     private final HBox controlPane;
     private final VBox editorBox;
     
@@ -41,17 +43,22 @@ public final class Editor{
     private int currentOutputPage;
     
     public Editor(){
+        UpdateHandler updateHandler = new UpdateHandler(this);
         jobNumberLabel = new Label("Job Number:");
         addressLabel = new Label("Address:");
         jobNumber = new TextField("");
+        jobNumber.setOnAction(updateHandler);
         address = new TextField("");
+        address.setOnAction(updateHandler);
         jobInfoLabel = new VBox(jobNumberLabel, addressLabel);
         jobInfoText = new VBox(jobNumber, address);
         jobInfo = new HBox(jobInfoLabel, jobInfoText);
         editor = new Accordion();
         newRoom = new Button("New Room");
         newRoom.setOnAction(new NewRoomHandler(this));
-        controlPane = new HBox(12, newRoom);
+        update = new Button("Update");
+        update.setOnAction(updateHandler);
+        controlPane = new HBox(12, newRoom, update);
         editorBox = new VBox(jobInfo, editor, controlPane);
         editorBox.setStyle("-fx-padding: 24px");
         currentOutputPage = 0;
@@ -103,7 +110,7 @@ public final class Editor{
             
             for(int i = 0; i < this.editor.getPanes().size(); i++){
                 Room currentRoom = (Room)this.editor.getPanes().get(i);
-                if(currentRoom.isSelected() && currentRoom.getNumberOfRoomItems() > 0){
+                if(currentRoom.isSelected() && currentRoom.getNumberOfCheckedRoomItems() > 0){
                     contentStream.showText(currentRoom.getText());
                     contentStream.newLineAtOffset(tab, -leading);
                     for(int j = 0; j < currentRoom.getNumberOfRoomItems(); j++){
@@ -120,6 +127,14 @@ public final class Editor{
         }
         catch(IOException ex){
             ex.printStackTrace();
+        }
+        if(this.document != null){
+            try{
+                this.document.close();
+            }
+            catch(IOException ex){
+                ex.printStackTrace();
+            }
         }
         this.document = document;
         //return document;

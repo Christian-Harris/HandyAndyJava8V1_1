@@ -7,7 +7,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.image.Image;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 import javafx.event.ActionEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
@@ -21,12 +20,10 @@ import application.editor.Editor;
 
 import java.io.File;
 import java.io.IOException;
-import java.awt.image.BufferedImage;
 
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import org.apache.pdfbox.text.PDFTextStripper;
 import parser.JensenPropertyManagementParser;
 
 /**
@@ -51,16 +48,11 @@ public final class UserMenu extends BorderPane{
     private  ImageView inputView;
     
     private final Pane rightPane;
-    private  File outputFile;
-    private  PDDocument outputDocument;
-    private int currentOutputPage;
-    private  Image outputImage;
-    private  ImageView outputView;
+    //private  PDDocument outputDocument;
     
     private final Pane centerPane;
     
     private PDFRenderer inputRenderer;
-    private PDFRenderer outputRenderer;
     private Editor editor;
     
     private final HandyAndyApplication application;
@@ -101,15 +93,6 @@ public final class UserMenu extends BorderPane{
         if(inputDocument != null && !(inputDocument.getDocument().isClosed())){
             try{
                 inputDocument.close();
-            }
-            catch(IOException ex){
-                ex.printStackTrace();
-            }
-        }
-        
-        if(outputDocument != null && (outputDocument.getDocument().isClosed())){
-            try{
-                outputDocument.close();
             }
             catch(IOException ex){
                 ex.printStackTrace();
@@ -187,9 +170,6 @@ public final class UserMenu extends BorderPane{
     public void close() throws IOException{
         if(this.inputDocument != null){
             this.inputDocument.close();
-        }
-        if(this.outputDocument != null){
-            this.outputDocument.close();
         }
     }
     

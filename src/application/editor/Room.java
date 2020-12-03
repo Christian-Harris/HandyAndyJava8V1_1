@@ -3,6 +3,8 @@ package application.editor;
 //import java.util.ArrayList;
 
 import handler.NewRoomItemHandler;
+import handler.RenameRoomHandler;
+import handler.RoomCheckHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
@@ -29,8 +31,10 @@ public final class Room extends TitledPane{
         newItem = new Button("New Item");
         newItem.setOnAction(new NewRoomItemHandler(this));
         renameRoom = new Button("Rename Room");
+        renameRoom.setOnAction(new RenameRoomHandler(this));
         checkBox = new CheckBox();
         checkBox.setSelected(true);
+        checkBox.setOnAction(new RoomCheckHandler(this));
         
         controlPane = new HBox(12, newItem, renameRoom, checkBox);
         
@@ -78,5 +82,15 @@ public final class Room extends TitledPane{
     
     public void update(){
         editor.generate();
+    }
+    
+    public int getNumberOfCheckedRoomItems(){
+        int count = 0;
+        for(int i = 0; i < this.getNumberOfRoomItems(); i++){
+            if(this.getRoomItem(i).isSelected()){
+                count++;
+            }
+        }
+        return count;
     }
 }
