@@ -37,7 +37,7 @@ public final class JensenPropertyManagementParser {
                     editor.setJobNumber(parser.next());
                     String address = "";
                     while(true){
-                        String temp = parser.next();
+                        String temp = parser.next().trim();
                         if(!temp.equalsIgnoreCase("Inspected")){
                             address += (temp + " ");
                         }
@@ -64,7 +64,7 @@ public final class JensenPropertyManagementParser {
                 }
                 Room currentRoom = new Room();
                 while(parser.hasNext()){
-                    String nextLine = parser.next();
+                    String nextLine = parser.next().trim();
                     if(nextLine.toLowerCase().contains("move-out pictures")){
                         break;
                     }

@@ -63,7 +63,7 @@ public final class UserMenu extends BorderPane{
     private PDFRenderer outputRenderer;
     private Editor editor;
     
-    private final Text output = new Text();
+    //private final Text output = new Text();
     
     private final HandyAndyApplication application;
     
@@ -134,35 +134,22 @@ public final class UserMenu extends BorderPane{
                 this.leftPane.getChildren().add(inputView);
                 this.setLeft(leftPane);
                 
-                /*
-                this.outputDocument = JensenPropertyManagementParser.parse(inputFile);
-                System.out.println(outputDocument.getNumberOfPages());
+                editor = JensenPropertyManagementParser.parse(file);
+                ScrollPane editorScroller = new ScrollPane();
+                editorScroller.setContent(editor);
+                this.centerPane.getChildren().clear();
+                this.centerPane.getChildren().add(editorScroller);
+                this.setCenter(centerPane);
+                
+                this.outputDocument = editor.generateDocument();
                 this.outputRenderer = new PDFRenderer(outputDocument);
                 this.currentOutputPage = 0;
                 this.outputImage = SwingFXUtils.toFXImage(outputRenderer.renderImage(currentOutputPage), null);
                 this.outputView = new ImageView();
                 this.outputView.setImage(outputImage);
+                this.rightPane.getChildren().clear();
                 this.rightPane.getChildren().add(outputView);
                 this.setRight(rightPane);
-                */
-                editor = JensenPropertyManagementParser.parse(file);
-                //editor = Editor.testBuild();
-                ScrollPane editorScroller = new ScrollPane();
-                editorScroller.setContent(editor);
-                this.centerPane.getChildren().clear();
-                
-                this.centerPane.getChildren().add(editorScroller);
-                this.setCenter(centerPane);
-                
-                
-                PDFTextStripper pdfStripper = new PDFTextStripper();
-                String text = pdfStripper.getText(inputDocument);
-                this.output.setText(text);
-                this.rightPane.getChildren().clear();
-                this.rightPane.getChildren().add(output);
-                this.setRight(rightPane);
-                
-                
             }
             catch(IOException ex){
                 ex.printStackTrace();

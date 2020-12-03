@@ -64,7 +64,15 @@ public final class Room extends TitledPane{
     
     public void addRoomItem(RoomItem roomItem){
         //this.contentPane.getChildren().add(0, roomItem);
-        this.contentPane.getChildren().add(roomItem);
+        this.roomItemPane.getChildren().add(roomItem);
+    }
+    
+    public RoomItem getRoomItem(int index){
+        return (RoomItem)(this.roomItemPane.getChildren().get(index));
+    }
+    
+    public int getNumberOfRoomItems(){
+        return this.roomItemPane.getChildren().size();
     }
     
     /*public void update(){
