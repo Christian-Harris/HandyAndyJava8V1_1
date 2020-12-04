@@ -58,16 +58,8 @@ public final class HandyAndyApplication extends Application{
         stage.show();
     }
     
-    public LoginMenu getLoginMenu(){
-        return this.loginMenu;
-    }
-    
     public void changeToLoginMenu(){
         this.scene.setRoot(loginMenu);
-    }
-    
-    public UserMenu getUserMenu(){
-        return this.userMenu;
     }
     
     public void changeToUserMenu(){
@@ -94,7 +86,6 @@ public final class HandyAndyApplication extends Application{
     
     public void connectToDatabase(String connectionString, String applicationUsername, String applicationPassword) throws SQLException{
         databaseConnection = DriverManager.getConnection(connectionString, applicationUsername, applicationPassword);
-        System.out.println("Connected to database.");
     }
     
     public void close(WindowEvent e){

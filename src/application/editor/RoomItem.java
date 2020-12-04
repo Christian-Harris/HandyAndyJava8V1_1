@@ -3,11 +3,8 @@ package application.editor;
 import handler.RoomItemCheckHandler;
 import handler.RoomItemTextHandler;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 
 
 /**
@@ -35,6 +32,11 @@ public final class RoomItem extends HBox{
         textField.setText(text);
     }
     
+    public RoomItem(Room room, String text, boolean checked){
+        this(room, text);
+        this.checkBox.setSelected(checked);
+    }
+    
     public String getText(){
         return textField.getText();
     }
@@ -49,5 +51,10 @@ public final class RoomItem extends HBox{
     
     public void update(){
         room.update();
+    }
+    
+    public SaveableRoomItem generateSaveableRoomItem(){
+        SaveableRoomItem value = new SaveableRoomItem(this.textField.getText(), this.checkBox.isSelected());
+        return value;
     }
 }

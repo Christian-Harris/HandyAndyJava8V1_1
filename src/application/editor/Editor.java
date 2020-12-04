@@ -1,6 +1,5 @@
 package application.editor;
 
-import application.Emailer;
 import java.util.ArrayList;
 import handler.NewRoomHandler;
 import handler.UpdateHandler;
@@ -41,7 +40,7 @@ public final class Editor{
     private final VBox editorBox;
     
     private PDDocument document;
-    private ImageView documentView;
+    private final ImageView documentView;
     private int currentOutputPage;
     
     private final ArrayList<String> workOrderUsers;
@@ -67,7 +66,40 @@ public final class Editor{
         editorBox.setStyle("-fx-padding: 24px");
         currentOutputPage = 0;
         documentView = new ImageView();
-        workOrderUsers = new ArrayList<String>();
+        workOrderUsers = new ArrayList<>();
+    }
+    
+    public Editor(SaveableEditor sEditor){
+       UpdateHandler updateHandler = new UpdateHandler(this);
+        jobNumberLabel = new Label("Job Number:");
+        addressLabel = new Label("Address:");
+        jobNumber = new TextField(sEditor.getJobNumber());
+        jobNumber.setOnAction(updateHandler);
+        address = new TextField(sEditor.getAddress());
+        address.setOnAction(updateHandler);
+        jobInfoLabel = new VBox(jobNumberLabel, addressLabel);
+        jobInfoText = new VBox(jobNumber, address);
+        jobInfo = new HBox(jobInfoLabel, jobInfoText);
+        editor = new Accordion();
+        newRoom = new Button("New Room");
+        newRoom.setOnAction(new NewRoomHandler(this));
+        update = new Button("Update");
+        update.setOnAction(updateHandler);
+        controlPane = new HBox(12, newRoom, update);
+        editorBox = new VBox(jobInfo, editor, controlPane);
+        editorBox.setStyle("-fx-padding: 24px");
+        currentOutputPage = 0;
+        documentView = new ImageView();
+        workOrderUsers = sEditor.getWorkOrderUsers();
+        
+        for(SaveableRoom room: sEditor.getRooms()){
+            Room currentRoom = new Room(this, room.getName(), room.getChecked());
+            for(SaveableRoomItem roomItem: room.getRoomItems()){
+                currentRoom.addRoomItem(new RoomItem(currentRoom, roomItem.getName(), roomItem.getChecked()));
+            }
+            this.addRoom(currentRoom);
+        }
+        this.generate();
     }
     
     public void setJobNumber(String jobNumber){
@@ -96,12 +128,12 @@ public final class Editor{
         float tab = 9.0f;
         float leading = 14.0f;
         
-        PDDocument document = new PDDocument();
+        PDDocument outputDocument = new PDDocument();
         PDPage page = new PDPage();
-        document.addPage(page);
+        outputDocument.addPage(page);
         PDPageContentStream contentStream;
         try{
-            contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.APPEND, false);
+            contentStream = new PDPageContentStream(outputDocument, page, PDPageContentStream.AppendMode.APPEND, false);
             contentStream.beginText();
             contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
             contentStream.setLeading(leading);
@@ -141,7 +173,7 @@ public final class Editor{
                 ex.printStackTrace();
             }
         }
-        this.document = document;
+        this.document = outputDocument;
         //return document;
     }
     
@@ -189,5 +221,13 @@ public final class Editor{
     
     public void clearWorkOrderUsers(){
         this.workOrderUsers.clear();
+    }
+    
+    public SaveableEditor generateSaveableEditor(){
+        ArrayList<SaveableRoom> rooms = new ArrayList<>();
+        for(int i = 0; i < this.editor.getPanes().size(); i++){
+            rooms.add(((Room)this.editor.getPanes().get(i)).generateSaveableRoom());
+        }
+        return new SaveableEditor(this.jobNumber.getText(), this.address.getText(), this.workOrderUsers, rooms);
     }
 }

@@ -1,17 +1,12 @@
 package handler;
 
-import application.HandyAndyApplication;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
-import javafx.scene.layout.Pane;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
 
 import menu.LoginMenu;
 import user.User;
@@ -52,7 +47,6 @@ public class LoginHandler implements EventHandler<ActionEvent>{
             else{
                 loginMenu.setLoginMessage("Invalid username or password.");
             }
-            
             statement.close();
             resultSet.close();
         }

@@ -1,6 +1,5 @@
 package handler;
 
-import application.editor.Editor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -24,11 +23,13 @@ public class AddUserToWorkOrderHandler implements EventHandler<ActionEvent>{
     
     @Override
     public void handle(ActionEvent e){
-        stage = new Stage();
-        AddUserToWorkOrderMenu menu = new AddUserToWorkOrderMenu(this.userMenu);
-        Scene scene = new Scene(menu, 400, 800);
-        stage.setScene(scene);
-        stage.show();
+        if(userMenu.getEditor() != null){
+            stage = new Stage();
+            AddUserToWorkOrderMenu menu = new AddUserToWorkOrderMenu(this.userMenu, this.stage);
+            Scene scene = new Scene(menu, 400, 800);
+            stage.setScene(scene);
+            stage.show();
+        }
         
     }
 }

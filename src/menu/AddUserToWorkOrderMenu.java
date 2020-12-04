@@ -11,6 +11,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  *
@@ -19,12 +20,14 @@ import javafx.scene.layout.VBox;
 public class AddUserToWorkOrderMenu extends VBox{
     
     private final UserMenu userMenu;
+    private final Stage stage;
     private final VBox usersBox;
     
     private final Button confirm;
     
-    public AddUserToWorkOrderMenu(UserMenu userMenu){
+    public AddUserToWorkOrderMenu(UserMenu userMenu, Stage stage){
         this.userMenu = userMenu;
+        this.stage = stage;
         confirm = new Button("Confirm");
         confirm.setOnAction(new ConfirmHandler());
         usersBox = new VBox();
@@ -57,6 +60,7 @@ public class AddUserToWorkOrderMenu extends VBox{
                     userMenu.getEditor().addWorkOrderUser(((User)usersBox.getChildren().get(i)).getUsername());
                 }
             }
+            stage.close();
         }
     }
     

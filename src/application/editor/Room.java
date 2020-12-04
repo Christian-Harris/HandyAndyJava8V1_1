@@ -5,6 +5,7 @@ package application.editor;
 import handler.NewRoomItemHandler;
 import handler.RenameRoomHandler;
 import handler.RoomCheckHandler;
+import java.util.ArrayList;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
@@ -50,6 +51,11 @@ public final class Room extends TitledPane{
         this.setText(text);
     }
     
+    public Room(Editor editor, String text, boolean checked){
+        this(editor, text);
+        this.checkBox.setSelected(checked);
+    }
+    
     public void setTitle(String title){
         this.setText(title);
         this.update();
@@ -92,5 +98,13 @@ public final class Room extends TitledPane{
             }
         }
         return count;
+    }
+    
+    public SaveableRoom generateSaveableRoom(){
+        ArrayList<SaveableRoomItem> saveableRoomItems = new ArrayList<>();
+        for(int i = 0; i < this.roomItemPane.getChildren().size(); i++){
+            saveableRoomItems.add(((RoomItem)this.roomItemPane.getChildren().get(i)).generateSaveableRoomItem());
+        }
+        return new SaveableRoom(this.getText(), this.checkBox.isSelected(), saveableRoomItems);
     }
 }

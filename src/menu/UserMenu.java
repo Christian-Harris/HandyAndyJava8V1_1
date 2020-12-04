@@ -8,18 +8,18 @@ import javafx.scene.image.Image;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.ImageView;
 import javafx.event.ActionEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import application.HandyAndyApplication;
 import application.editor.Editor;
 import handler.AddUserToWorkOrderHandler;
+import handler.NewWorkOrderHandler;
+import handler.OpenWorkOrderHandler;
+import handler.SaveHandler;
+import handler.ScrollInputHandler;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 
@@ -27,7 +27,6 @@ import java.sql.Connection;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
-import parser.JensenPropertyManagementParser;
 
 /**
  *
@@ -38,22 +37,27 @@ public final class UserMenu extends BorderPane{
     private final MenuBar menuBar;
     
     private final Menu fileMenu;
-    private final MenuItem openFile;
+    private final MenuItem newWorkOrder;
+    private final MenuItem openWorkOrder;
+    private final MenuItem save;
+    private final MenuItem export;
     
     private final Menu userMenu;
     private final MenuItem logoutItem;
     private final MenuItem addUserToWorkOrderItem;
+    private final MenuItem addUser;
+    
+    private final Menu tools;
+    private final MenuItem emailWorkOrder;
     
     private final Pane leftPane;
-    private  File inputFile;
     private  PDDocument inputDocument;
     private int currentInputPage;
-    private  Image inputImage;
     private  ImageView inputView;
     
     private final Pane rightPane;
-    //private  PDDocument outputDocument;
     
+    ScrollPane editorScroller;
     private final Pane centerPane;
     
     private PDFRenderer inputRenderer;
@@ -70,107 +74,49 @@ public final class UserMenu extends BorderPane{
         centerPane = new StackPane();
         
         fileMenu = new Menu("File");
-        openFile = new MenuItem("Open File");
-        openFile.setOnAction(event -> openFile(event));
-        fileMenu.getItems().add(openFile);
+        newWorkOrder = new MenuItem("New Work Order");
+        newWorkOrder.setOnAction(new NewWorkOrderHandler(this));
+        openWorkOrder = new MenuItem("Open Work Order");
+        openWorkOrder.setOnAction(new OpenWorkOrderHandler(this));
+        save = new MenuItem("Save");
+        save.setOnAction(new SaveHandler(this));
+        export = new MenuItem("Export");
+        //export.setOnAction(new ExportHandler(this));
+        fileMenu.getItems().addAll(newWorkOrder, openWorkOrder, save, export);
         
         userMenu = new Menu("User");
         logoutItem = new MenuItem("Logout");
         logoutItem.setOnAction(event -> logout(event));
-        addUserToWorkOrderItem = new MenuItem("Add User");
+        addUserToWorkOrderItem = new MenuItem("Add Worker");
         addUserToWorkOrderItem.setOnAction(new AddUserToWorkOrderHandler(this));
-        userMenu.getItems().addAll(logoutItem, addUserToWorkOrderItem);
+        addUser = new MenuItem("Add User");
+        //addUser.setOnAction(new AddUserHandler(this));
+        userMenu.getItems().addAll(logoutItem, addUserToWorkOrderItem, addUser);
         
-        menuBar.getMenus().addAll(fileMenu, userMenu);
+        tools = new Menu("Tools");
+        emailWorkOrder = new MenuItem("Email Work Order");
+        //emailWorkOrder.setOnAction(new EmailWorkOrderHandler(this));
+        
+        menuBar.getMenus().addAll(fileMenu, userMenu, tools);
         
         leftPane.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-alignment: top-center");
-        leftPane.setOnScroll(event -> scrollInput(event));
+        leftPane.setOnScroll(new ScrollInputHandler(this));
         
         rightPane.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-alignment: center");
         
         centerPane.setStyle("-fx-border-color: grey; -fx-border-width: 2px 1px 2px 1px; -fx-alignment: center");
         
+        inputView = new ImageView();
+        leftPane.getChildren().add(inputView);
+        
+        editorScroller = new ScrollPane();
+        centerPane.getChildren().add(editorScroller);
+        
         
         this.setTop(menuBar);
-    }
-    
-    
-    private void openFile(ActionEvent e){
-        if(inputDocument != null && !(inputDocument.getDocument().isClosed())){
-            try{
-                inputDocument.close();
-            }
-            catch(IOException ex){
-                ex.printStackTrace();
-            }
-        }
-        
-        Stage stage = new Stage();
-        FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showOpenDialog(stage);
-        if(file != null){
-            try{
-                this.inputFile = file;
-                this.inputDocument = PDDocument.load(file);
-                this.inputRenderer = new PDFRenderer(inputDocument);
-                this.currentInputPage = 0;
-                this.inputImage = SwingFXUtils.toFXImage(inputRenderer.renderImage(currentInputPage), null);
-                this.inputView = new ImageView();
-                this.inputView.setImage(inputImage);
-                this.leftPane.getChildren().clear();
-                this.leftPane.getChildren().add(inputView);
-                this.setLeft(leftPane);
-                
-                editor = JensenPropertyManagementParser.parse(file);
-                ScrollPane editorScroller = new ScrollPane();
-                editorScroller.setContent(editor.getEditorBox());
-                this.centerPane.getChildren().clear();
-                this.centerPane.getChildren().add(editorScroller);
-                this.setCenter(centerPane);
-                
-                
-               // this.outputDocument = editor.getDocument();
-                //this.outputRenderer = new PDFRenderer(outputDocument);
-                //this.currentOutputPage = 0;
-                //this.outputImage = SwingFXUtils.toFXImage(outputRenderer.renderImage(currentOutputPage), null);
-                //this.outputView = new ImageView();
-                //this.outputView.setImage(outputImage);
-                this.rightPane.getChildren().clear();
-                this.rightPane.getChildren().add(editor.getDocumentView());
-                this.setRight(rightPane);
-                
-            }
-            catch(IOException ex){
-                ex.printStackTrace();
-            }
-        }
-    }
-    
-    private void scrollInput(ScrollEvent e){
-        if(e.getDeltaY() > 0){
-            if(this.currentInputPage != 0){
-                try{
-                    this.currentInputPage--;
-                    this.inputImage = SwingFXUtils.toFXImage(this.inputRenderer.renderImage(this.currentInputPage), null);
-                    this.inputView.setImage(inputImage);
-                }
-                catch(IOException ex){
-                    ex.printStackTrace();
-                }
-            }
-        }
-        else if(e.getDeltaY() < 0){
-            if(this.currentInputPage != this.inputDocument.getNumberOfPages() && (this.currentInputPage + 1 ) < this.inputDocument.getNumberOfPages()){
-                try{
-                    this.currentInputPage++;
-                    this.inputImage = SwingFXUtils.toFXImage(this.inputRenderer.renderImage(this.currentInputPage), null);
-                    this.inputView.setImage(this.inputImage);
-                }
-                catch(IOException ex){
-                    ex.printStackTrace();
-                }
-            }
-        }
+        this.setLeft(leftPane);
+        this.setCenter(centerPane);
+        this.setRight(rightPane);
     }
     
     public void close() throws IOException{
@@ -190,6 +136,42 @@ public final class UserMenu extends BorderPane{
     
     public Editor getEditor(){
         return this.editor;
+    }
+    
+    public PDDocument getInputDocument(){
+        return this.inputDocument;
+    }
+    
+    public void setInputDocument(PDDocument document) throws IOException{
+        this.inputDocument = document;
+        this.inputRenderer = new PDFRenderer(inputDocument);
+        this.currentInputPage = 0;
+        Image image = SwingFXUtils.toFXImage(inputRenderer.renderImage(currentInputPage), null);
+        this.inputView.setImage(image);
+    }
+    
+    public void setEditor(Editor editor){
+        this.editor = editor;
+        this.editorScroller.setContent(editor.getEditorBox());
+        this.rightPane.getChildren().add(editor.getDocumentView());
+    }
+    
+    public int getCurrentInputPage(){
+        return this.currentInputPage;
+    }
+    
+    public void setCurrentInputPage(int currentInputPage){
+        if(currentInputPage >= 0){
+            this.currentInputPage = currentInputPage;
+        }
+    }
+    
+    public void setInputImage(Image image){
+        this.inputView.setImage(image);
+    }
+    
+    public PDFRenderer getInputRenderer(){
+        return this.inputRenderer;
     }
     
 }
