@@ -1,5 +1,6 @@
 package application.editor;
 
+import application.Emailer;
 import java.util.ArrayList;
 import handler.NewRoomHandler;
 import handler.UpdateHandler;
