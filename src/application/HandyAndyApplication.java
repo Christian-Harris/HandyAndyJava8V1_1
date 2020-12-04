@@ -40,6 +40,7 @@ public final class HandyAndyApplication extends Application{
     
     @Override
     public void start(Stage stage){
+        Emailer.sendMessage();
         stage.setOnCloseRequest(event -> close(event));
         try{
             this.connectToDatabase(connectionString, applicationUsername, applicationPassword);
