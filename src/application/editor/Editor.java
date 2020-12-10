@@ -20,7 +20,9 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
 /**
- *
+ *The Editor class controls the dynamic editing of a parsed Handy Andy work order. The primary editor takes the form of a JavaFX
+ * accordion. Changes made within the accordion are instantly rendered out into an output PDDocument which is also viewed as part of 
+ * the editor.
  * @author Christian Harris
  */
 

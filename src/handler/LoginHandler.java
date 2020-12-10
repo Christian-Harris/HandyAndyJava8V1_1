@@ -13,7 +13,9 @@ import user.User;
 import user.UserType;
 
 /**
- *
+ *The LoginHandler class handles the action of logging into the Handy Andy Application. The handler reads the input from the login
+ * prompts and queries the Handy Andy database for a matching user. If a match is found a database connection is formed and the appliation
+ * loads the user menu.
  * @author Christian Harris
  */
 public class LoginHandler implements EventHandler<ActionEvent>{

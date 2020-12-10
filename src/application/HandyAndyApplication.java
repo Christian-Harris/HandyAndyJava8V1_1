@@ -16,7 +16,8 @@ import user.User;
 import menu.UserMenu;
 
 /**
- *
+ *The HandyAndyApplication class is the controller class for the Handy Andy Application. This class is meant to initialize the menus and
+ * control the access to the Handy Andy Database through a sql connection.
  * @author Christian Harris
  */
 

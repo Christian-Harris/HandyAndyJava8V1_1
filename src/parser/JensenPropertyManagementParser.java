@@ -12,7 +12,9 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 /**
- *
+ * The JensenPropertymanagementPaser class is designed to parse a Jensen Property Management work order. The parser loads a file of a
+ * work order and then utilizes a PDFTextStripper to strip the raw text as a String. This String is then parsed for the relevant information.
+ * Finally an editor object is generated and passed back as the return value.
  * @author Christian Harris
  */
 public final class JensenPropertyManagementParser {

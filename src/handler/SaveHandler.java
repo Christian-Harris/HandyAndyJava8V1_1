@@ -8,14 +8,13 @@ import java.io.ObjectOutputStream;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import menu.UserMenu;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
- *
+ * The SaveHandler class handles the saving of the current state of a loaded work order. The work order is saved as a collection of 3
+ * files. The input document, the output document, and the internal state of the editor object.
  * @author Christian Harris
  */
 public class SaveHandler implements EventHandler<ActionEvent>{

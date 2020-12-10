@@ -1,7 +1,5 @@
 package application.editor;
 
-//import java.util.ArrayList;
-
 import handler.NewRoomItemHandler;
 import handler.RenameRoomHandler;
 import handler.RoomCheckHandler;
@@ -13,7 +11,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.CheckBox;
 
 /**
- *
+ *The Room class is a container object for the Editor class. This class extends TitledPane and adds various controls for added functionality.
+ * In particular the room controls generating new RoomItems for itself, the ability to rename itself, and a selected state.
  * @author Christian Harris
  */
 public final class Room extends TitledPane{
@@ -65,16 +64,11 @@ public final class Room extends TitledPane{
         return this.getText();
     }
     
-    /*public ArrayList<RoomItem> getRoomItems(){
-        return this.roomItems;
-    }*/
-    
     public boolean isSelected(){
         return this.checkBox.isSelected();
     }
     
     public void addRoomItem(RoomItem roomItem){
-        //this.contentPane.getChildren().add(0, roomItem);
         this.roomItemPane.getChildren().add(roomItem);
     }
     

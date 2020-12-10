@@ -10,7 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
- *
+ * The RenameRoomHandler class handles the dialog required to allow a user to rename a room. When the handle is called a dialog opens
+ * allowing the user to enter the new room name and the confirm with a button.
  * @author Christian Harris
  */
 public class RenameRoomHandler implements EventHandler<ActionEvent>{

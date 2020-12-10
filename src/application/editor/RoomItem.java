@@ -9,7 +9,9 @@ import javafx.scene.layout.Priority;
 
 
 /**
- *
+ *The RoomItem class is the smallest container for the Editor class. A RoomItem consists of a TextField and a CheckBox. The text field
+ * describes a work item to be performed in the given Room of which RoomItems contains a reference to. RoomItem also contains a CheckBox
+ * to describe a selected state.
  * @author Christian Harris
  */
 public final class RoomItem extends HBox{

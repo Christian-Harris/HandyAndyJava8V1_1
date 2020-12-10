@@ -4,7 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
+ *The SaveableEditor class stores all the necessary information to generate an Editor object. It's purpose is to implement the Serializable
+ * interface so that the state of an Editor object can be saved.
  * @author Christian Harris
  */
 public class SaveableEditor implements Serializable{

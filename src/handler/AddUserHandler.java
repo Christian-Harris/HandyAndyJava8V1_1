@@ -12,10 +12,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import menu.UserMenu;
 
-/**
- *
- * @author Christian Harris
- */
 public class AddUserHandler implements EventHandler<ActionEvent>{
     private final UserMenu userMenu;
     

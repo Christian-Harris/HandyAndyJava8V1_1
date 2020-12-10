@@ -4,10 +4,6 @@ import application.editor.Editor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-/**
- *
- * @author Christian Harris
- */
 public class UpdateHandler implements EventHandler<ActionEvent>{
     private final Editor editor;
     

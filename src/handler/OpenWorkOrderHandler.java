@@ -14,7 +14,7 @@ import application.editor.Editor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
- *
+ * The OpenWorkOrderHandler class handles the opening of a previously saved work order.
  * @author Christian Harris
  */
 public class OpenWorkOrderHandler implements EventHandler<ActionEvent>{

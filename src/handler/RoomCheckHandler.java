@@ -5,7 +5,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 /**
- *
+ * The RoomCheckHandler class handles the action of selecting or deselecting a room in the editor. Only selected rooms are rendered
+ * to the output so once the selection is changed a call to the rooms update is made.
  * @author Christian Harris
  */
 public class RoomCheckHandler implements EventHandler<ActionEvent>{

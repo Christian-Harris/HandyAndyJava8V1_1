@@ -5,7 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 /**
- *
+ * The RoomItemTextHandler class handles the action of changing the text of a RoomItem. The handler simply calls the roomItem's update method.
  * @author Christian Harris
  */
 public class RoomItemTextHandler implements EventHandler<ActionEvent>{

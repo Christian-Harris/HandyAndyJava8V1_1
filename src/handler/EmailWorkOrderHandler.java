@@ -15,7 +15,9 @@ import javafx.stage.Stage;
 import menu.UserMenu;
 
 /**
- *
+ *The EmailWorkOrderHandler object handles the action of creating an Emailer object and running that object on a thread.
+ * The Emailer is populated with the current work orders PDDocument and is mailed to all users who have been added to the current
+ * work order.
  * @author Christian Harris
  */
 public class EmailWorkOrderHandler implements EventHandler<ActionEvent>{

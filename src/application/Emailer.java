@@ -22,7 +22,8 @@ import javax.mail.util.ByteArrayDataSource;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 /**
- *
+ * An Emailer is a write only object designed to automate the distribution of work orders through email. The object is to be populated
+ * with both a recipient and a document. The Emailer can then be added to a thread and ran to send the email.
  * @author Christian Harris
  */
 public class Emailer implements Runnable{
@@ -59,32 +60,19 @@ public class Emailer implements Runnable{
         Properties properties = System.getProperties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.port", "587");
-        //properties.put("mail.smtp.ssl.endable", "true");
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
         
         Authenticator auth = new Authenticator() {
-			//override the getPasswordAuthentication method
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(from, password);
 			}
 		};
-
-        /*Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(from, password);
-            }
-        });*/
         Session session = Session.getInstance(properties, auth);
 
         try{
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
-            /*Address[] addresses = new Address[recipients.size()];
-            for(int i = 0; i < recipients.size(); i++){
-                addresses[i] = new InternetAddress(recipients.get(i));
-            }*/
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
             message.setSubject("Subject Line");
             BodyPart messageBodyPart = new MimeBodyPart();
@@ -103,9 +91,7 @@ public class Emailer implements Runnable{
             multipart.addBodyPart(pdfBodyPart);
 
             message.setContent(multipart);
-            //System.out.println("Sending...");
             Transport.send(message);
-            //System.out.println("Sent message successfully...");
         }
         catch(MessagingException | IOException ex){
             ex.printStackTrace();

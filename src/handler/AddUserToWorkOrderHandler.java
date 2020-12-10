@@ -9,7 +9,8 @@ import menu.AddUserToWorkOrderMenu;
 import menu.UserMenu;
 
 /**
- *
+ *The AddUserToWorkOrderHandler class handles the action of adding a user defined in the Handy Andy database to the currently loaded work
+ * order. The handler generates a check menu with all of the current users. The chosen users can then be selected for future processing.
  * @author Christian Harris
  */
 public class AddUserToWorkOrderHandler implements EventHandler<ActionEvent>{

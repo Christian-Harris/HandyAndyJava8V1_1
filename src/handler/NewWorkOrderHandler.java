@@ -15,7 +15,8 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import parser.JensenPropertyManagementParser;
 
 /**
- *
+ * The NewWorkOrderHandler class is designed to allow a user to select a Jensen Property Management work order and load it into the 
+ * Handy Andy Application. When the handle is called a file chooser is opened.
  * @author Christian Harris
  */
 public class NewWorkOrderHandler implements EventHandler<ActionEvent>{

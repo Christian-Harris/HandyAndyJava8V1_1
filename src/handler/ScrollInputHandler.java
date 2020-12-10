@@ -7,7 +7,8 @@ import javafx.scene.input.ScrollEvent;
 import menu.UserMenu;
 
 /**
- *
+ * The ScrollInputHandler handles the scrolling of the input document. When the mouse wheel is scrolled up or down the document pages
+ * are iterated accordingly.
  * @author Christian Harris
  */
 public class ScrollInputHandler implements EventHandler<ScrollEvent>{
