@@ -35,7 +35,7 @@ public final class Editor{
     private final HBox jobInfo;
     private final Accordion editor;
     private final Button newRoom;
-    private final Button update;
+    //private final Button update;
     private final HBox controlPane;
     private final VBox editorBox;
     
@@ -48,25 +48,31 @@ public final class Editor{
     public Editor(){
         UpdateHandler updateHandler = new UpdateHandler(this);
         jobNumberLabel = new Label("Job Number:");
+        jobNumberLabel.setStyle("-fx-text-alignment: right");
         addressLabel = new Label("Address:");
+        addressLabel.setStyle("-fx-text-alignment: right");
         jobNumber = new TextField("");
         jobNumber.setOnAction(updateHandler);
         address = new TextField("");
+        address.setPrefWidth(200);
         address.setOnAction(updateHandler);
         jobInfoLabel = new VBox(jobNumberLabel, addressLabel);
+        jobInfoLabel.setStyle("-fx-alignment: center-right");
         jobInfoText = new VBox(jobNumber, address);
-        jobInfo = new HBox(jobInfoLabel, jobInfoText);
+        jobInfo = new HBox(4, jobInfoLabel, jobInfoText);
         editor = new Accordion();
         newRoom = new Button("New Room");
         newRoom.setOnAction(new NewRoomHandler(this));
-        update = new Button("Update");
-        update.setOnAction(updateHandler);
-        controlPane = new HBox(12, newRoom, update);
+        //update = new Button("Update");
+        //update.setOnAction(updateHandler);
+        //controlPane = new HBox(12, newRoom, update);
+        controlPane = new HBox(12, newRoom);
         editorBox = new VBox(jobInfo, editor, controlPane);
-        editorBox.setStyle("-fx-padding: 24px");
+        editorBox.setStyle("-fx-padding: 12px");
         currentOutputPage = 0;
         documentView = new ImageView();
         workOrderUsers = new ArrayList<>();
+        //editor.setStyle("-fx-border-width: 4px; -fx-border-color: blue; -fx-scale-shape: true");
     }
     
     public Editor(SaveableEditor sEditor){
@@ -83,9 +89,10 @@ public final class Editor{
         editor = new Accordion();
         newRoom = new Button("New Room");
         newRoom.setOnAction(new NewRoomHandler(this));
-        update = new Button("Update");
-        update.setOnAction(updateHandler);
-        controlPane = new HBox(12, newRoom, update);
+        //update = new Button("Update");
+        //update.setOnAction(updateHandler);
+        //controlPane = new HBox(12, newRoom, update);
+        controlPane = new HBox(12, newRoom);
         editorBox = new VBox(jobInfo, editor, controlPane);
         editorBox.setStyle("-fx-padding: 24px");
         currentOutputPage = 0;

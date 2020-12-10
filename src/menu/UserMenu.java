@@ -14,7 +14,9 @@ import javafx.scene.layout.StackPane;
 
 import application.HandyAndyApplication;
 import application.editor.Editor;
+import handler.AddUserHandler;
 import handler.AddUserToWorkOrderHandler;
+import handler.EmailWorkOrderHandler;
 import handler.NewWorkOrderHandler;
 import handler.OpenWorkOrderHandler;
 import handler.SaveHandler;
@@ -22,6 +24,8 @@ import handler.ScrollInputHandler;
 
 import java.io.IOException;
 import java.sql.Connection;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 
 
@@ -40,25 +44,25 @@ public final class UserMenu extends BorderPane{
     private final MenuItem newWorkOrder;
     private final MenuItem openWorkOrder;
     private final MenuItem save;
-    private final MenuItem export;
+    //private final MenuItem export;
     
     private final Menu userMenu;
     private final MenuItem logoutItem;
     private final MenuItem addUserToWorkOrderItem;
-    private final MenuItem addUser;
+    //private final MenuItem addUser;
     
     private final Menu tools;
     private final MenuItem emailWorkOrder;
     
-    private final Pane leftPane;
+    private final StackPane leftPane;
     private  PDDocument inputDocument;
     private int currentInputPage;
     private  ImageView inputView;
     
-    private final Pane rightPane;
+    private final StackPane rightPane;
     
     ScrollPane editorScroller;
-    private final Pane centerPane;
+    private final HBox centerPane;
     
     private PDFRenderer inputRenderer;
     private Editor editor;
@@ -71,7 +75,7 @@ public final class UserMenu extends BorderPane{
         inputView = new ImageView();
         leftPane = new StackPane();
         rightPane = new StackPane();
-        centerPane = new StackPane();
+        centerPane = new HBox();
         
         fileMenu = new Menu("File");
         newWorkOrder = new MenuItem("New Work Order");
@@ -80,37 +84,40 @@ public final class UserMenu extends BorderPane{
         openWorkOrder.setOnAction(new OpenWorkOrderHandler(this));
         save = new MenuItem("Save");
         save.setOnAction(new SaveHandler(this));
-        export = new MenuItem("Export");
+        //export = new MenuItem("Export");
         //export.setOnAction(new ExportHandler(this));
-        fileMenu.getItems().addAll(newWorkOrder, openWorkOrder, save, export);
+        fileMenu.getItems().addAll(newWorkOrder, openWorkOrder, save);
         
         userMenu = new Menu("User");
         logoutItem = new MenuItem("Logout");
         logoutItem.setOnAction(event -> logout(event));
         addUserToWorkOrderItem = new MenuItem("Add Worker");
         addUserToWorkOrderItem.setOnAction(new AddUserToWorkOrderHandler(this));
-        addUser = new MenuItem("Add User");
+        //addUser = new MenuItem("Add User");
         //addUser.setOnAction(new AddUserHandler(this));
-        userMenu.getItems().addAll(logoutItem, addUserToWorkOrderItem, addUser);
+        userMenu.getItems().addAll(logoutItem, addUserToWorkOrderItem);
         
         tools = new Menu("Tools");
         emailWorkOrder = new MenuItem("Email Work Order");
-        //emailWorkOrder.setOnAction(new EmailWorkOrderHandler(this));
+        emailWorkOrder.setOnAction(new EmailWorkOrderHandler(this));
+        tools.getItems().add(emailWorkOrder);
         
         menuBar.getMenus().addAll(fileMenu, userMenu, tools);
         
-        leftPane.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-alignment: top-center");
+        leftPane.setStyle("-fx-border-color: #355E99; -fx-border-width: 2px; -fx-alignment: top-center");
         leftPane.setOnScroll(new ScrollInputHandler(this));
         
-        rightPane.setStyle("-fx-border-color: grey; -fx-border-width: 2px; -fx-alignment: center");
+        rightPane.setStyle("-fx-border-color: #355E99; -fx-border-width: 2px; -fx-alignment: center");
         
-        centerPane.setStyle("-fx-border-color: grey; -fx-border-width: 2px 1px 2px 1px; -fx-alignment: center");
+        centerPane.setStyle("-fx-border-color: #355E99; -fx-border-width: 2px 1px 2px 1px; -fx-alignment: center");
         
         inputView = new ImageView();
         leftPane.getChildren().add(inputView);
         
         editorScroller = new ScrollPane();
+        editorScroller.setStyle("-fx-fit-to-width: true");
         centerPane.getChildren().add(editorScroller);
+        centerPane.setHgrow(editorScroller, Priority.ALWAYS);
         
         
         this.setTop(menuBar);
@@ -128,6 +135,11 @@ public final class UserMenu extends BorderPane{
     public void logout(ActionEvent e){
         this.application.setCurrentUser(null);
         this.application.changeToLoginMenu();
+        this.inputDocument = null;
+        this.editor = null;
+        this.inputView.setImage(null);
+        this.editorScroller.setContent(null);
+        this.rightPane.getChildren().clear();
     }
     
     public Connection getDatabaseConnection(){

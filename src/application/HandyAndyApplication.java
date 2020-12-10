@@ -21,7 +21,6 @@ import menu.UserMenu;
  */
 
 public final class HandyAndyApplication extends Application{
-    
     private User currentUser = null;
     
     private String applicationUsername = "application";
@@ -91,7 +90,6 @@ public final class HandyAndyApplication extends Application{
     public void close(WindowEvent e){
         try{
             this.databaseConnection.close();
-            System.out.println("Disconnected from database.");
             this.userMenu.close();
         }
         catch(SQLException ex){

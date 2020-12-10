@@ -5,6 +5,7 @@ import handler.RoomItemTextHandler;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 
 /**
@@ -25,6 +26,7 @@ public final class RoomItem extends HBox{
         checkBox.setSelected(true);
         checkBox.setOnAction(new RoomItemCheckHandler(this));
         this.getChildren().addAll(checkBox, textField);
+        this.setHgrow(textField, Priority.ALWAYS);
     }
     
     public RoomItem(Room room, String text){

@@ -45,9 +45,11 @@ public final class JensenPropertyManagementParser {
                 }
             }
             int numberOfPages = document.getNumberOfPages();
-            for(int i = 0; i < numberOfPages; i++){
-                parser.reset();
-                parser.useDelimiter("\n");
+            parser.reset();
+            parser.useDelimiter("\n");
+            //for(int i = 0; i < numberOfPages; i++){
+                //parser.reset();
+                //parser.useDelimiter("\n");
                 while(parser.hasNext()){
                     if(!parser.nextLine().equalsIgnoreCase("Condition Notes")){
                         continue;
@@ -80,6 +82,9 @@ public final class JensenPropertyManagementParser {
                     if(nextLine.toLowerCase().contains("condition notes")){
                         continue;
                     }
+                    if(nextLine.toLowerCase().contains("com needs complete painting fc full clean rpl needs replacement rpr needs repair w wipe down")){
+                        continue;
+                    }
                     if(!nextLine.toLowerCase().contains("rpr") && !nextLine.toLowerCase().contains("rpl")){
                         currentRoom = new Room(editor, nextLine);
                         editor.addRoom(currentRoom);
@@ -90,7 +95,7 @@ public final class JensenPropertyManagementParser {
                         //System.out.println("Item: " + nextLine);
                     }
                 }
-            }
+            //}
             document.close();
         }
         catch(IOException ex){

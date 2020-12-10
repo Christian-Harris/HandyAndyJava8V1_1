@@ -12,12 +12,15 @@ import handler.LoginHandler;
 import application.HandyAndyApplication;
 
 import java.sql.Connection;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 
 /**
  *
  * @author Christian Harris
  */
-public final class LoginMenu extends Pane{
+public final class LoginMenu extends StackPane{
     
     private final VBox loginBox;
     
@@ -36,21 +39,29 @@ public final class LoginMenu extends Pane{
     
     public LoginMenu(HandyAndyApplication application){
         this.application = application;
-        userLabel = new Label("Username: ");
-        userTextField = new TextField("username");
-        userBox = new HBox(userLabel, userTextField);
+        userLabel = new Label("Username:");
+        userLabel.setStyle("-fx-text-alignment: right; -fx-font: 16 helvetica");
+        userTextField = new TextField();
+        userTextField.setPrefSize(128, 16);
+        userBox = new HBox(4, userLabel, userTextField);
+        userBox.setStyle("-fx-alignment: center");
         
-        passwordLabel = new Label("Password: ");
+        passwordLabel = new Label("Password:");
+        passwordLabel.setStyle("-fx-text-alignment: right; -fx-font: 16 helvetica");
         passwordField = new PasswordField();
-        passwordBox = new HBox(passwordLabel, passwordField);
+        passwordField.setPrefSize(128, 16);
+        passwordBox = new HBox(4, passwordLabel, passwordField);
+        passwordBox.setStyle("-fx-alignment: center");
         
         loginButton = new Button("Login");
         loginButton.setOnAction(new LoginHandler(this));
         
         loginMessage = new Label("");
         
-        loginBox = new VBox(userBox, passwordBox, loginButton, loginMessage);
+        loginBox = new VBox(8, userBox, passwordBox, loginButton, loginMessage);
+        loginBox.setStyle("-fx-alignment: center");
         
+        this.setStyle("-fx-background-color: #355E99; -fx-alignment: center");
         this.getChildren().add(loginBox);
         
     }
